@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KYC Portal - User Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#d8e2ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed": "#001453",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "tertiary-container": "#00489e",
+                    "outline": "#757684",
+                    "primary-fixed": "#dde1ff",
+                    "secondary": "#565e74",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#173bab",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#001a42",
+                    "on-surface": "#0b1c30",
+                    "surface-variant": "#d3e4fe",
+                    "surface-dim": "#cbdbf5",
+                    "on-secondary-container": "#5c647a",
+                    "on-surface-variant": "#444653",
+                    "on-error-container": "#93000a",
+                    "primary": "#00288e",
+                    "surface-tint": "#3755c3",
+                    "surface": "#f8f9ff",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#adc6ff",
+                    "tertiary": "#003272",
+                    "surface-container-high": "#dce9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container": "#e5eeff",
+                    "inverse-primary": "#b8c4ff",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#a8b8ff",
+                    "on-tertiary-container": "#9cbbff",
+                    "background": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "secondary-container": "#dae2fd",
+                    "secondary-fixed": "#dae2fd",
+                    "primary-container": "#1e40af",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#004395",
+                    "surface-container-low": "#eff4ff",
+                    "outline-variant": "#c4c5d5",
+                    "error-container": "#ffdad6"
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-8 bg-surface-container-lowest h-16 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="font-headline-md font-bold text-primary">KYC Portal - Admin</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-px bg-outline-variant"></div>
+<form method="POST" action="{% url 'logout' %}" style="display:inline;">
+{% csrf_token %}
+<button type="submit" class="text-body-md font-semibold hover:text-primary transition-colors">Logout</button>
+</form>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen">
+{% include 'kyc/includes/sidebar.html' with sidebar_type='admin' %}
+<main class="ml-[260px] flex-1 p-8 max-w-[1440px]">
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-[32px] font-bold text-on-surface mb-2">User Management</h1>
+<p class="text-on-surface-variant text-[16px]">View and monitor user accounts without leaving the portal.</p>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 bg-primary text-on-primary rounded-full w-fit">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span class="text-[12px] uppercase tracking-wide">Users</span>
+</div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="glass-card rounded-xl p-6">
+<p class="text-[12px] uppercase tracking-widest text-on-surface-variant">Total Users</p>
+<p class="text-[28px] font-bold text-primary mt-2">{{ total_users }}</p>
+</div>
+<div class="glass-card rounded-xl p-6">
+<p class="text-[12px] uppercase tracking-widest text-on-surface-variant">Active</p>
+<p class="text-[28px] font-bold text-secondary mt-2">{{ active_users }}</p>
+</div>
+<div class="glass-card rounded-xl p-6">
+<p class="text-[12px] uppercase tracking-widest text-on-surface-variant">Staff</p>
+<p class="text-[28px] font-bold text-tertiary mt-2">{{ staff_users }}</p>
+</div>
+<div class="glass-card rounded-xl p-6">
+<p class="text-[12px] uppercase tracking-widest text-on-surface-variant">Superusers</p>
+<p class="text-[28px] font-bold text-on-surface mt-2">{{ super_users }}</p>
+</div>
+</div>
+
+{% if messages %}
+<div class="mb-6 space-y-3">
+{% for message in messages %}
+<div class="px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface">
+{{ message }}
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="glass-card rounded-xl p-6 lg:col-span-2">
+<h2 class="text-[18px] font-bold mb-4">Create User</h2>
+<form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+{% csrf_token %}
+<input type="hidden" name="action" value="create"/>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Username</label>
+{{ create_form.username }}
+{{ create_form.username.errors }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Email</label>
+{{ create_form.email }}
+{{ create_form.email.errors }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Password</label>
+{{ create_form.password1 }}
+{{ create_form.password1.errors }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Confirm Password</label>
+{{ create_form.password2 }}
+{{ create_form.password2.errors }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Active</label>
+{{ create_form.is_active }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Staff</label>
+{{ create_form.is_staff }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Superuser</label>
+{{ create_form.is_superuser }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Groups</label>
+{{ create_form.groups }}
+{{ create_form.groups.errors }}
+</div>
+<div class="md:col-span-2">
+<button type="submit" class="px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold hover:bg-primary-container transition-all">Create User</button>
+</div>
+</form>
+</div>
+
+<div class="glass-card rounded-xl p-6">
+<h2 class="text-[18px] font-bold mb-4">Edit User</h2>
+{% if edit_form and edit_user %}
+<form method="POST" class="space-y-4">
+{% csrf_token %}
+<input type="hidden" name="action" value="update"/>
+<input type="hidden" name="user_id" value="{{ edit_user.id }}"/>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Username</label>
+{{ edit_form.username }}
+{{ edit_form.username.errors }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Email</label>
+{{ edit_form.email }}
+{{ edit_form.email.errors }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Active</label>
+{{ edit_form.is_active }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Staff</label>
+{{ edit_form.is_staff }}
+</div>
+<div class="flex items-center gap-3">
+<label class="text-[12px] text-on-surface-variant">Superuser</label>
+{{ edit_form.is_superuser }}
+</div>
+<div>
+<label class="block text-[12px] text-on-surface-variant mb-1">Groups</label>
+{{ edit_form.groups }}
+{{ edit_form.groups.errors }}
+</div>
+<div class="flex items-center gap-3">
+<button type="submit" class="px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold hover:bg-primary-container transition-all">Save Changes</button>
+<a href="{% url 'user_management' %}" class="px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-all">Cancel</a>
+</div>
+</form>
+{% else %}
+<p class="text-on-surface-variant text-[13px]">Select a user from the table to edit.</p>
+{% endif %}
+</div>
+</div>
+
+<div class="glass-card rounded-xl p-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<h2 class="text-[18px] font-bold">All Users</h2>
+<div class="flex items-center gap-3">
+<span class="text-[12px] text-on-surface-variant">{{ users|length }} records</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full text-left text-[13px]">
+<thead class="text-on-surface-variant border-b border-outline-variant">
+<tr>
+<th class="py-3 pr-6 font-semibold">Username</th>
+<th class="py-3 pr-6 font-semibold">Email</th>
+<th class="py-3 pr-6 font-semibold">Groups</th>
+<th class="py-3 pr-6 font-semibold">Status</th>
+<th class="py-3 pr-6 font-semibold">Last Login</th>
+<th class="py-3 pr-6 font-semibold">Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for user in users %}
+<tr class="border-b border-outline-variant/60">
+<td class="py-3 pr-6 font-semibold text-on-surface">{{ user.username }}</td>
+<td class="py-3 pr-6 text-on-surface-variant">{{ user.email|default:"—" }}</td>
+<td class="py-3 pr-6 text-on-surface-variant">
+{% if user.groups.all %}
+{% for group in user.groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+{% else %}
+—
+{% endif %}
+</td>
+<td class="py-3 pr-6">
+{% if user.is_active %}
+<span class="inline-flex px-3 py-1 rounded-full text-[11px] bg-secondary-container text-on-secondary-container">Active</span>
+{% else %}
+<span class="inline-flex px-3 py-1 rounded-full text-[11px] bg-error-container text-on-error-container">Inactive</span>
+{% endif %}
+</td>
+<td class="py-3 pr-6 text-on-surface-variant">{{ user.last_login|default:"—" }}</td>
+<td class="py-3 pr-6">
+<div class="flex items-center gap-2">
+<a href="{% url 'user_management' %}?edit={{ user.id }}" class="px-3 py-1 rounded-lg text-[12px] bg-surface-container-low hover:bg-surface-container-high text-on-surface">Edit</a>
+<form method="POST" onsubmit="return confirm('Delete user {{ user.username }}?');">
+{% csrf_token %}
+<input type="hidden" name="action" value="delete"/>
+<input type="hidden" name="user_id" value="{{ user.id }}"/>
+<button type="submit" class="px-3 py-1 rounded-lg text-[12px] bg-error-container text-on-error-container hover:opacity-80">Delete</button>
+</form>
+</div>
+</td>
+</tr>
+{% empty %}
+<tr>
+<td class="py-6 text-on-surface-variant" colspan="6">No users found.</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>
