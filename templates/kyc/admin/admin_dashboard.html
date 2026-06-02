@@ -133,7 +133,7 @@
 <h5 class="text-[18px] font-bold">Pending Reviews</h5>
 <span class="material-symbols-outlined text-primary">schedule</span>
 </div>
-<p class="text-[32px] font-bold text-primary">24</p>
+<p class="text-[32px] font-bold text-primary">{{ pending_count }}</p>
 <p class="text-on-surface-variant text-[13px] mt-2">Awaiting verification</p>
 </div>
 <div class="col-span-12 md:col-span-3 glass-card rounded-xl p-6">
@@ -141,7 +141,7 @@
 <h5 class="text-[18px] font-bold">Approved Today</h5>
 <span class="material-symbols-outlined text-secondary">done</span>
 </div>
-<p class="text-[32px] font-bold text-secondary">156</p>
+<p class="text-[32px] font-bold text-secondary">{{ approved_today }}</p>
 <p class="text-on-surface-variant text-[13px] mt-2">Successfully verified</p>
 </div>
 <div class="col-span-12 md:col-span-3 glass-card rounded-xl p-6">
@@ -149,7 +149,7 @@
 <h5 class="text-[18px] font-bold">Rejected</h5>
 <span class="material-symbols-outlined text-error">close</span>
 </div>
-<p class="text-[32px] font-bold text-error">8</p>
+<p class="text-[32px] font-bold text-error">{{ rejected_count }}</p>
 <p class="text-on-surface-variant text-[13px] mt-2">Failed verification</p>
 </div>
 <div class="col-span-12 md:col-span-3 glass-card rounded-xl p-6">
@@ -157,7 +157,7 @@
 <h5 class="text-[18px] font-bold">Total Users</h5>
 <span class="material-symbols-outlined text-tertiary">group</span>
 </div>
-<p class="text-[32px] font-bold text-tertiary">1,234</p>
+<p class="text-[32px] font-bold text-tertiary">{{ total_users }}</p>
 <p class="text-on-surface-variant text-[13px] mt-2">Active accounts</p>
 </div>
 
@@ -183,18 +183,17 @@
 <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
 <h4 class="text-[12px] text-on-surface-variant mb-4 uppercase font-bold">Quick Actions</h4>
 <div class="space-y-3">
-<a href="{% url 'user_management' %}" class="block p-3 bg-surface-container-low hover:bg-surface-container-high rounded-lg transition-colors">
-<p class="text-on-surface font-semibold text-[14px]">Manage Users</p>
-<p class="text-on-surface-variant text-[12px]">Create, edit user accounts</p>
+{% for feature in features %}
+<a href="{% url feature.url_name %}" class="block p-3 bg-surface-container-low hover:bg-surface-container-high rounded-lg transition-colors">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-[16px]">{{ feature.icon }}</span>
+<p class="text-on-surface font-semibold text-[14px]">{{ feature.title }}</p>
+</div>
+<p class="text-on-surface-variant text-[12px]">{{ feature.description }}</p>
 </a>
-<a href="{% url 'document_review' %}" class="block p-3 bg-surface-container-low hover:bg-surface-container-high rounded-lg transition-colors">
-<p class="text-on-surface font-semibold text-[14px]">Review Documents</p>
-<p class="text-on-surface-variant text-[12px]">Verify submitted documents</p>
-</a>
-<a href="#" class="block p-3 bg-surface-container-low hover:bg-surface-container-high rounded-lg transition-colors">
-<p class="text-on-surface font-semibold text-[14px]">View Reports</p>
-<p class="text-on-surface-variant text-[12px]">Analytics and statistics</p>
-</a>
+{% empty %}
+<p class="text-on-surface-variant text-[12px]">No features available</p>
+{% endfor %}
 </div>
 </div>
 <div class="bg-primary text-on-primary rounded-xl p-6 shadow-md">
