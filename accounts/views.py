@@ -10,6 +10,13 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 
 def login_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect(reverse('admin_dashboard'))
+        if request.user.groups.filter(name__iexact='verifier').exists():
+            return redirect(reverse('verifier_dashboard'))
+        return redirect(reverse('client_dashboard'))
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -50,6 +57,13 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 def register_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect(reverse('admin_dashboard'))
+        if request.user.groups.filter(name__iexact='verifier').exists():
+            return redirect(reverse('verifier_dashboard'))
+        return redirect(reverse('client_dashboard'))
+
     if request.method == 'POST':
         from kyc.forms import UserRoleSelectionForm
         form = UserRoleSelectionForm(request.POST)

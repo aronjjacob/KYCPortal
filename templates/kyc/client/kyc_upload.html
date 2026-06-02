@@ -139,7 +139,7 @@
       <section class="flex-1 md:ml-[260px] p-6 md:p-10 bg-slate-50">
         <div class="max-w-4xl mx-auto">
           <!-- Stepper Progress Indicator -->
-          {% include 'kyc/includes/stepper.html' %}
+          {% include 'kyc/includes/stepper.html' with active_step=1 %}
           <!-- Form Card -->
           <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
             <div class="p-8 border-b border-outline-variant bg-surface-container-low/30">
@@ -341,20 +341,7 @@
           </div>
 
           <!-- Support Card -->
-          <div class="mt-8 flex items-center justify-between p-6 bg-tertiary-fixed rounded-xl border border-outline-variant/30">
-            <div class="flex items-center gap-4">
-              <div class="p-3 bg-on-tertiary-fixed-variant/10 rounded-full">
-                <span class="material-symbols-outlined text-primary">contact_support</span>
-              </div>
-              <div>
-                <h4 class="font-label-md text-label-md text-on-tertiary-fixed font-bold">Need help with this step?</h4>
-                <p class="font-body-sm text-body-sm text-on-tertiary-fixed">Our compliance team is available 24/7 to assist you.</p>
-              </div>
-            </div>
-            <button class="px-4 py-2 bg-on-tertiary-fixed text-white rounded-lg text-label-md font-semibold hover:opacity-90 transition-all">
-              Chat Now
-            </button>
-          </div>
+         
         </div>
       </section>
     </main>

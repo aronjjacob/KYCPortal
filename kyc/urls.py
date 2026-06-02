@@ -29,5 +29,5 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('user-management/', views.user_management, name='user_management'),
     path('review/', views.document_review, name='document_review'),
-
+    path('audit-logs/', views.audit_log, name='audit_logs'),
 ]

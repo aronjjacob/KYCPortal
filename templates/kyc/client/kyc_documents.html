@@ -132,44 +132,7 @@
          {% include 'kyc/includes/sidebar.html' with sidebar_type='client' %}
 
       <!-- Stepper Component -->
-      <div class="mb-12">
-        <div class="flex items-center justify-between relative">
-          <!-- Connector Line -->
-          <div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-high -translate-y-1/2 -z-10"></div>
-
-          <!-- Step 1 (Completed) -->
-          <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
-              <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Personal Info</span>
-          </div>
-
-          <!-- Step 2 (Active) -->
-          <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
-              <span class="font-headline-sm text-headline-sm">2</span>
-            </div>
-            <span class="font-label-md text-label-md text-primary font-bold">Document Upload</span>
-          </div>
-
-          <!-- Step 3 (Future) -->
-          <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
-              <span class="font-headline-sm text-headline-sm">3</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Liveness Check</span>
-          </div>
-
-          <!-- Step 4 (Future) -->
-          <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
-              <span class="font-headline-sm text-headline-sm">4</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Review</span>
-          </div>
-        </div>
-      </div>
+      {% include 'kyc/includes/stepper.html' with active_step=2 %}
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
         <!-- Left Column: Form & Upload -->
@@ -199,22 +162,6 @@
                 {% if document_form.document_type.errors %}
                   <p class="text-red-600 text-sm mt-2">{{ document_form.document_type.errors.0 }}</p>
                 {% endif %}
-            </div>
-
-            <!-- ID Number Field -->
-            <div class="mb-8">
-              <label class="block font-body-sm font-bold text-on-surface mb-2" for="id_number">Document Number</label>
-              <input
-                class="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all text-body-md"
-                id="id_number"
-                name="id_number"
-                value="{{ document_form.id_number.value|default:'' }}"
-                placeholder="Enter your ID or Passport number"
-                type="text"
-              />
-              {% if document_form.id_number.errors %}
-                <p class="text-red-600 text-sm mt-2">{{ document_form.id_number.errors.0 }}</p>
-              {% endif %}
             </div>
 
             <!-- Front of ID -->
@@ -288,10 +235,10 @@
 
           <!-- Navigation Buttons -->
           <div class="flex items-center justify-between mt-4">
-            <button type="button" onclick="window.location.href='{% url 'kyc_upload' %}';" class="px-8 py-3 text-primary font-bold flex items-center gap-2 hover:bg-surface-container-low rounded-xl transition-all">
+            <a type="button" href="{% url 'kyc_upload' %}" class="px-8 py-3 text-primary font-bold flex items-center gap-2 hover:bg-surface-container-low rounded-xl transition-all">
               <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
               Back
-            </button>
+            </a>
             <a href="{% if document and document.front_image and document.back_image %}{% url 'kyc_liveness' %}{% else %}#{% endif %}" id="documents-continue-link" class="px-10 py-3 bg-primary text-white font-bold rounded-xl flex items-center gap-2 hover:shadow-lg hover:bg-primary-container active:scale-[0.98] transition-all">
               Continue to Liveness Check
               <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
@@ -373,7 +320,7 @@
       </div>
     </div>
 
-    <script>
+    <!-- <script>
       const toast = document.getElementById('toast');
 
       {% if messages %}
@@ -400,6 +347,6 @@
           this.querySelector('span:last-child').classList.add('text-primary', 'font-bold');
         });
       });
-    </script>
+    </script> -->
   </body>
 </html>

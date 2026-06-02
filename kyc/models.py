@@ -108,3 +108,30 @@ class AdminDashboardFeature(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class AuditLog(models.Model):
+    """Audit log for verifier actions on KYC applications.
+
+    Stores a record whenever an application/profile is reviewed by a verifier or
+    admin: which application, who performed the action, the action taken,
+    optional remarks, and the timestamp.
+    """
+    application = models.ForeignKey(
+        'KYCApplication',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='audit_logs',
+    )
+    verifier = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    verifier_name = models.CharField(max_length=150, blank=True)
+    action = models.CharField(max_length=100)
+    remarks = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"{self.timestamp} - {self.verifier_name or 'Unknown'} - {self.action}"
