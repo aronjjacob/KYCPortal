@@ -10,6 +10,9 @@ def group_required(group_name):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated:
+                # allow superusers/staff to bypass group checks
+                if request.user.is_superuser or request.user.is_staff:
+                    return view_func(request, *args, **kwargs)
                 if request.user.groups.filter(name=group_name).exists():
                     return view_func(request, *args, **kwargs)
             from django.shortcuts import redirect
