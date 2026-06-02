@@ -1,38 +1,88 @@
+{% with active_step=active_step|default:1 %}
     <div class="mb-12">
         <div class="flex items-center justify-between relative">
           <!-- Connector Line -->
           <div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-high -translate-y-1/2 -z-10"></div>
 
-          <!-- Step 1 (Completed) -->
+          <!-- Step 1 -->
           <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
-              <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Personal Info</span>
+            {% if active_step > 1 %}
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Personal Info</span>
+            {% elif active_step == 1 %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
+                <span class="font-headline-sm text-headline-sm">1</span>
+              </div>
+              <span class="font-label-md text-label-md text-primary font-bold">Personal Info</span>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
+                <span class="font-headline-sm text-headline-sm">1</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Personal Info</span>
+            {% endif %}
           </div>
 
-          <!-- Step 2 (Active) -->
+          <!-- Step 2 -->
           <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
-              <span class="font-headline-sm text-headline-sm">2</span>
-            </div>
-            <span class="font-label-md text-label-md text-primary font-bold">Document Upload</span>
+            {% if active_step > 2 %}
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Document Upload</span>
+            {% elif active_step == 2 %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
+                <span class="font-headline-sm text-headline-sm">2</span>
+              </div>
+              <span class="font-label-md text-label-md text-primary font-bold">Document Upload</span>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
+                <span class="font-headline-sm text-headline-sm">2</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Document Upload</span>
+            {% endif %}
           </div>
 
-          <!-- Step 3 (Future) -->
+          <!-- Step 3 -->
           <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
-              <span class="font-headline-sm text-headline-sm">3</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Liveness Check</span>
+            {% if active_step > 3 %}
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Liveness Check</span>
+            {% elif active_step == 3 %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
+                <span class="font-headline-sm text-headline-sm">3</span>
+              </div>
+              <span class="font-label-md text-label-md text-primary font-bold">Liveness Check</span>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
+                <span class="font-headline-sm text-headline-sm">3</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Liveness Check</span>
+            {% endif %}
           </div>
 
-          <!-- Step 4 (Future) -->
+          <!-- Step 4 -->
           <div class="flex flex-col items-center gap-2 bg-background px-4">
-            <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
-              <span class="font-headline-sm text-headline-sm">4</span>
-            </div>
-            <span class="font-label-md text-label-md text-on-surface-variant">Review</span>
+            {% if active_step > 4 %}
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-body-lg" data-icon="check">check</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Review</span>
+            {% elif active_step == 4 %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary active-step-ring">
+                <span class="font-headline-sm text-headline-sm">4</span>
+              </div>
+              <span class="font-label-md text-label-md text-primary font-bold">Review</span>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
+                <span class="font-headline-sm text-headline-sm">4</span>
+              </div>
+              <span class="font-label-md text-label-md text-on-surface-variant">Review</span>
+            {% endif %}
           </div>
         </div>
       </div>
+{% endwith %}

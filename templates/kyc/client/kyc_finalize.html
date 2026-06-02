@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="light" lang="en" style="">
+<html class="light" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -192,7 +192,7 @@
                {% include 'kyc/includes/sidebar.html' with sidebar_type='client' %}
                 
             <div class="max-w-4xl mx-auto space-y-8">
-                 {% include 'kyc/includes/stepper.html' %}
+                 {% include 'kyc/includes/stepper.html' with active_step=4 %}
                 <!-- Header -->
                 <section>
                     <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Final Review</h1>
@@ -209,7 +209,7 @@
                                 <span class="material-symbols-outlined">person</span>
                                 Personal Information
                             </h3>
-                            <button type="button" onclick="window.location.href='{% url 'kyc_upload' %}';" class="text-primary font-label-md hover:underline">Edit</button>
+                            <a type="button" href="{% url 'kyc_upload' %}" class="text-primary font-label-md hover:underline">Edit</a>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
                             <div>
@@ -250,11 +250,7 @@
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
                             </div>
                         </div>
-                        <div
-                            class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                            VERIFIED
-                        </div>
+                        
                         <p class="mt-4 text-on-surface-variant font-body-sm">Biometric scan completed successfully on
                             {{ document.uploaded_at|date:"Y-m-d" }}.</p>
                     </div>
@@ -263,8 +259,8 @@
                         class="md:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2"><span
-                                    class="material-symbols-outlined">badge</span>Document Verification</h3><button
-                                class="text-primary font-label-md hover:underline" type="button" onclick="window.location.href='{% url 'kyc_documents' %}';">Edit</button>
+                                    class="material-symbols-outlined">badge</span>Document Verification</h3><a
+                                class="text-primary font-label-md hover:underline" href="{% url 'kyc_documents' %}">Edit</a>
                         </div>
                         <div class="space-y-8">
                             <div
@@ -371,12 +367,12 @@
                         Save as Draft
                     </button>
                     <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                        <button
+                        <a
                             type="button"
-                            onclick="window.location.href='{% url 'kyc_liveness' %}';"
+                            href="{% url 'kyc_liveness' %}"
                             class="px-8 py-3 rounded-xl bg-surface-variant text-on-surface-variant font-semibold hover:bg-surface-container-highest transition-all">
                             Back to Step 3
-                        </button>
+                        </a>
                         <button
                             type="submit"
                             class="px-10 py-3 rounded-xl bg-primary text-white font-bold opacity-50 cursor-not-allowed hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2"

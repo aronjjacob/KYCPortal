@@ -164,18 +164,7 @@
                         <p class="font-body-md text-body-md text-on-surface-variant">Welcome back, Alex. You have 42
                             applications requiring immediate review.</p>
                     </div>
-                    <div class="flex gap-3">
-                        <button
-                            class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">filter_list</span>
-                            Filter
-                        </button>
-                        <button
-                            class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">download</span>
-                            Export
-                        </button>
-                    </div>
+                
                 </div>
                 <!-- Bento Grid Summary Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -229,7 +218,7 @@
                             Completed Today</h3>
                         <p class="font-headline-lg text-headline-lg text-on-surface">{{ completed_today_count }}</p>
                         <div class="mt-4 w-full bg-surface-container-low rounded-full h-1.5 overflow-hidden">
-                            <div class="bg-primary h-full" style="width: {{ completed_today_pct }}%"></div>
+                            <div class="bg-primary h-full" "></div>
                         </div>
                         <p class="mt-2 text-on-surface-variant text-[11px] font-medium">{{ completed_today_pct }}% of daily target reached</p>
                     </div>
@@ -280,7 +269,7 @@
                                         {{ app.created_at|date:"M d, Y h:i A" }}</td>
                                     <!-- Risk Level cell removed -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <a href="{% url 'verifier_document_review' app.pk %}"
+                                        <a href="{% url 'verifier_document_review' app.pk    %}"
                                             class="inline-flex items-center justify-center bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">
                                             Review
                                         </a>

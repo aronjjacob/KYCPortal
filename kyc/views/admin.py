@@ -7,13 +7,15 @@ from django.contrib.auth import get_user_model
 from django.views import View
 from django.views.generic import TemplateView
 from django.utils import timezone
-from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from datetime import timedelta
 
 from ..decorators import group_required
 from ..forms import UserCreateForm, UserUpdateForm
-from ..models import KYCProfile, KYCDocument, KYCApplication, AdminDashboardFeature
+from ..models import KYCProfile, KYCDocument, KYCApplication, AdminDashboardFeature, AuditLog
+from .verifier import _build_page_numbers
 
+PAGE_SIZE = 10
 
 @method_decorator([login_required, group_required('verifier')], name='dispatch')
 class AdminDashboardView(TemplateView):
@@ -45,6 +47,40 @@ class AdminDashboardView(TemplateView):
         
         # Get active features for quick actions
         context['features'] = AdminDashboardFeature.objects.filter(is_active=True)
+
+        # Application-level stats
+        applications = KYCApplication.objects.select_related('profile', 'user').order_by('-created_at')
+        context['total_assigned'] = applications.count()
+        context['pending_review_count'] = applications.filter(status__in=['pending', 'under_review']).count()
+
+        # Completed today (applications approved today)
+        completed_today = applications.filter(status='approved', updated_at__date=today).count()
+        context['completed_today_count'] = completed_today
+        goal = 25
+        context['completed_today_goal'] = goal
+        context['completed_today_pct'] = int(min(100, (completed_today / goal) * 100)) if goal else 0
+
+        # Approval rate and avg review time (processed apps)
+        processed = KYCApplication.objects.filter(status__in=['approved', 'rejected'])
+        total_processed = processed.count()
+        approved_count = processed.filter(status='approved').count()
+        context['total_processed'] = total_processed
+        context['approval_rate'] = int((approved_count / total_processed) * 100) if total_processed else 0
+
+        from django.db.models import Avg, ExpressionWrapper, F, DurationField
+        avg_review_duration = processed.aggregate(
+            avg_time=Avg(
+                ExpressionWrapper(
+                    F('updated_at') - F('created_at'),
+                    output_field=DurationField(),
+                )
+            )
+        )['avg_time']
+        context['avg_review_minutes'] = int(avg_review_duration.total_seconds() / 60) if avg_review_duration else 0
+
+        # Recent activity
+        context['recent_audits'] = AuditLog.objects.select_related('verifier', 'application').order_by('-timestamp')[:6]
+        context['recent_applications'] = applications.order_by('-updated_at')[:6]
         
         return context
 
@@ -171,6 +207,20 @@ class DocumentReviewView(View):
             profile.application.status = app_status
             profile.application.save()
 
+        # create audit log entry for this admin review action
+        try:
+            verifier_name = request.user.get_full_name() or request.user.username
+        except Exception:
+            verifier_name = 'Unknown'
+
+        AuditLog.objects.create(
+            application=getattr(profile, 'application', None),
+            verifier=request.user if request.user.is_authenticated else None,
+            verifier_name=verifier_name,
+            action=app_status,
+            remarks=remarks,
+        )
+
         for document in documents:
             document.remarks = remarks
             document.save()
@@ -231,6 +281,137 @@ class BulkUpdateStatusView(View):
 
         return redirect('admin_dashboard')
 
+@method_decorator([login_required, group_required('verifier')], name='dispatch')
+class VerifierReviewQueueView(TemplateView):
+    template_name = "kyc/verifier/review_queue.html"
+    paginate_by = PAGE_SIZE
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        applications = KYCApplication.objects.select_related("profile", "user", "document").filter(
+            status__in=["pending", "under_review"]
+        ).order_by("-created_at")
+        paginator = Paginator(applications, self.paginate_by)
+        page_number = self.request.GET.get("page", 1)
+
+        try:
+            page_obj = paginator.page(page_number)
+        except (PageNotAnInteger, EmptyPage):
+            page_obj = paginator.page(1)
+
+        context.update(
+            {
+                "page_obj": page_obj,
+                "applications": page_obj.object_list,
+                "page_numbers": _build_page_numbers(page_obj.number, paginator.num_pages),
+                "total_applications": applications.count(),
+            }
+        )
+        return context
+
+
+@method_decorator([login_required, group_required('verifier')], name='dispatch')
+class AuditLogView(TemplateView):
+    template_name = "kyc/admin/audit_log.html"
+    paginate_by = PAGE_SIZE
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Base queryset
+        logs = AuditLog.objects.select_related('verifier', 'application', 'application__user').order_by('-timestamp')
+
+        # Filters from query params
+        q = self.request.GET.get('q', '').strip()
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        event_type = self.request.GET.get('event_type', '').strip()
+
+        from django.db.models import Q
+        if q:
+            # search verifier name, username, action, or application id
+            filters = Q(verifier_name__icontains=q) | Q(verifier__username__icontains=q) | Q(action__icontains=q)
+            if q.isdigit():
+                filters |= Q(application__id=int(q))
+            logs = logs.filter(filters)
+
+        if event_type:
+            logs = logs.filter(action__iexact=event_type)
+
+        if start_date:
+            try:
+                from django.utils.dateparse import parse_date
+
+                sd = parse_date(start_date)
+                if sd:
+                    logs = logs.filter(timestamp__date__gte=sd)
+            except Exception:
+                pass
+
+        if end_date:
+            try:
+                from django.utils.dateparse import parse_date
+
+                ed = parse_date(end_date)
+                if ed:
+                    logs = logs.filter(timestamp__date__lte=ed)
+            except Exception:
+                pass
+
+        # Export CSV if requested
+        if self.request.GET.get('export') == 'csv':
+            import csv
+            from django.http import HttpResponse
+
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="audit_log.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['timestamp', 'verifier_name', 'verifier_username', 'application_id', 'action', 'remarks'])
+            for l in logs:
+                writer.writerow([
+                    l.timestamp.isoformat(),
+                    l.verifier_name,
+                    l.verifier.username if l.verifier else '',
+                    l.application.id if l.application else '',
+                    l.action,
+                    (l.remarks or ''),
+                ])
+            return response
+
+        # pagination
+        paginator = Paginator(logs, self.paginate_by)
+        page_number = self.request.GET.get('page', 1)
+
+        try:
+            page_obj = paginator.page(page_number)
+        except Exception:
+            page_obj = paginator.page(1)
+
+        # build base querystring excluding page for pagination links and export link
+        params = self.request.GET.copy()
+        if 'page' in params:
+            params.pop('page')
+        base_qs = params.urlencode()
+
+        # Only show approved and rejected in the dropdown
+        event_types = ['approved', 'rejected']
+
+        context.update({
+            'page_obj': page_obj,
+            'audit_logs': page_obj.object_list,
+            'page_numbers': _build_page_numbers(page_obj.number, paginator.num_pages),
+            'total_logs': logs.count(),
+            'base_qs': base_qs,
+            'event_types': event_types,
+            'current_q': q,
+            'current_start_date': start_date,
+            'current_end_date': end_date,
+            'current_event_type': event_type,
+        })
+
+        return context
+
+
 
 # Export as_view() with original names for URL compatibility
 admin_dashboard = AdminDashboardView.as_view()
@@ -238,3 +419,4 @@ user_management = UserManagementView.as_view()
 document_review = DocumentReviewView.as_view()
 document_detail = DocumentDetailView.as_view()
 bulk_update_status = BulkUpdateStatusView.as_view()
+audit_log = AuditLogView.as_view()

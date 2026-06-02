@@ -9,6 +9,7 @@ from django.db.models import Avg, ExpressionWrapper, F, DurationField
 
 from ..decorators import group_required
 from ..models import KYCApplication
+from ..models import AuditLog
 
 PAGE_SIZE = 10
 
@@ -178,6 +179,20 @@ class VerifierDocumentReviewView(TemplateView):
 
         application.save()
         profile.save()
+
+        # create audit log entry for this review action
+        try:
+            verifier_name = request.user.get_full_name() or request.user.username
+        except Exception:
+            verifier_name = 'Unknown'
+
+        AuditLog.objects.create(
+            application=application,
+            verifier=request.user if request.user.is_authenticated else None,
+            verifier_name=verifier_name,
+            action=application.status,
+            remarks=remarks,
+        )
 
         if application.document and remarks:
             application.document.remarks = remarks

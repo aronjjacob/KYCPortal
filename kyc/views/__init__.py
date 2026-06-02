@@ -5,6 +5,7 @@ from .admin import (
     user_management,
     document_detail,
     bulk_update_status,
+    audit_log
 )
 from .verifier import (
     verifier_dashboard,
