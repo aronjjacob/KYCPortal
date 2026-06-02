@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: KYCPortal
+    env: python
+    region: oregon
+    plan: starter
+    branch: main
+    buildCommand: ./build.sh
+    startCommand: python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "your-app.onrender.com"
+    autoDeploy: true
+    disk: 512MB
+
+databases:
+  - name: kycportal-db
+    plan: starter
+    databaseName: kycportal
+    region: oregon
+    from: render
