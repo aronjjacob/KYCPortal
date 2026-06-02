@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KYC Portal | Document Review</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#0b1c30",
+                        "on-tertiary-fixed": "#001a42",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#444653",
+                        "on-secondary-container": "#5c647a",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#757684",
+                        "tertiary-container": "#00489e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-primary-fixed": "#001453",
+                        "tertiary-fixed": "#d8e2ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-primary-fixed-variant": "#173bab",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "primary-fixed": "#dde1ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#9cbbff",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#a8b8ff",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#b8c4ff",
+                        "outline-variant": "#c4c5d5",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "primary-container": "#1e40af",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "secondary-container": "#dae2fd",
+                        "surface-tint": "#3755c3",
+                        "primary": "#00288e",
+                        "surface-container": "#e5eeff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#003272",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max-width": "1440px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code": ["jetbrainsMono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "code": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8f9ff;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c4c5d5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="font-body-md text-on-surface">
+    <!-- Sidebar (SideNavBar) -->
+       {%include 'kyc/includes/sidebar.html' with sidebar_type='verifier' %}
+    <!-- Top Navigation (TopNavBar) -->
+    {% include 'kyc/includes/navbar.html' %}
+
+    <main class="ml-[260px] pt-6 min-h-screen pb-32">
+        <div class="max-w-[1440px] mx-auto p-4 grid grid-cols-12 gap-gutter">
+            <!-- LEFT COLUMN: Client Information -->
+            <section class="col-span-3 space-y-6">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Client Info</h2>
+                        <span
+                            class="bg-surface-container-highest text-primary px-2 py-1 rounded text-[10px] font-bold uppercase">Pending</span>
+                    </div>
+                    <div class="flex flex-col items-center mb-6">
+                        <img alt="Jonathan Sterling"
+                            class="w-24 h-24 rounded-xl border-2 border-primary-container object-cover mb-3"
+                            data-alt="A formal identification style portrait of a middle-aged man with short dark hair and a neutral expression, suitable for a KYC application. He is positioned against a plain, neutral light gray background with sharp, even studio lighting that highlights clear facial features for biometric matching. The visual style is crisp and professional."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEihjrBR8pR9c9542--bbaCSO8E00D1uNKR11VwaJvr0oHDi1cNOZedecwJo8aGVu9GRp1RgD5--h4c3zW0C23rgCSAS-pY-5XSiWQLuawdKxaC9RdTeW3Da6TD-mA1-TqgoubGgoaSAS-ECb4qeWnbCBDJr7RYzqPIEpkC1h6YRtTZN2IoOKJTkC4WxHrccM8yseYiv6KzLLNJ102ET09rjl2EtyA48ucdpAIr1_0BpSfw00Y-5FWvtiQ9GSSMl4ti3ccRGy8hQ" />
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface">Jonathan Sterling</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Tier 2 Individual Account</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Date of
+                                Birth</label>
+                            <p class="font-body-md text-body-md font-semibold">March 14, 1985</p>
+                        </div>
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Residential
+                                Address</label>
+                            <p class="font-body-md text-body-md font-semibold">221B Baker Street, London, NW1 6XE, UK
+                            </p>
+                        </div>
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Contact
+                                Number</label>
+                            <p class="font-body-md text-body-md font-semibold">+44 20 7946 0958</p>
+                        </div>
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Email
+                                Address</label>
+                            <p class="font-body-md text-body-md font-semibold">j.sterling@example.com</p>
+                        </div>
+                        <div class="pt-4 border-t border-outline-variant">
+                            <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Submission
+                                Date</label>
+                            <p class="font-body-md text-body-md font-semibold">Oct 24, 2023 • 14:22 GMT</p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-surface-container-high/30 border border-outline-variant rounded-xl p-4 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Client IP matches registered region
+                        (United Kingdom).</p>
+                </div>
+            </section>
+            <!-- CENTER COLUMN: Document Preview -->
+            <section class="col-span-6 space-y-6">
+                <div
+                    class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm overflow-hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Document Evidence</h2>
+                        <div class="flex gap-2">
+                            <button
+                                class="px-3 py-1.5 bg-surface-container-low text-on-surface-variant rounded flex items-center gap-2 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">download</span>
+                                <span class="font-label-md text-label-md">Download All</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <!-- ID Front -->
+                        <div class="group relative rounded-lg border border-outline-variant overflow-hidden">
+                            <div
+                                class="absolute top-3 right-3 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">zoom_in</span></button>
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">open_in_full</span></button>
+                            </div>
+                            <div
+                                class="bg-surface-container-low p-2 border-b border-outline-variant flex justify-between items-center">
+                                <span class="font-label-md text-label-md text-on-surface-variant">National Passport -
+                                    Front</span>
+                                <span
+                                    class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LEGIBLE</span>
+                            </div>
+                            <img alt="Passport Front" class="w-full h-48 object-cover cursor-pointer"
+                                data-alt="A detailed, macro photograph of a modern British passport's main bio-data page. The image shows crisp typography, a hologram security feature refracting light, and clear administrative data. The lighting is diffused and professional to avoid glare, set within a sterile, secure verification interface context."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4zukUuyAGHHOU9qHzCwxnPlNox0Ji_VwahKaHET98bN7q-xujoLHoK8xzaXQhy2l3wctLpIfNdF7E7Kr8TZW6GEgfAzi1aD46L87HAYwGRKeaS9CnAYzE7nUwu2Q29XvJggcoyc70wuFCPnBaha4ebfIYOQP6tWAPAqXcOXoXfoHbE4BcCBkAN0GX-1pFpcRg_h0z_x45haNljFcK51M_OqUfw4l181d7LiMG8V7Ioorz-XOWHNrxdVUUOgrvEMLc2irXFh-03A" />
+                        </div>
+                        <!-- ID Back -->
+                        <div class="group relative rounded-lg border border-outline-variant overflow-hidden">
+                            <div
+                                class="absolute top-3 right-3 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">zoom_in</span></button>
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">open_in_full</span></button>
+                            </div>
+                            <div
+                                class="bg-surface-container-low p-2 border-b border-outline-variant flex justify-between items-center">
+                                <span class="font-label-md text-label-md text-on-surface-variant">National Passport -
+                                    Back/Secondary</span>
+                                <span
+                                    class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LEGIBLE</span>
+                            </div>
+                            <img alt="Passport Back" class="w-full h-48 object-cover cursor-pointer"
+                                data-alt="A high-resolution photograph of the back cover or a secondary security page of a passport. The texture of the passport material is visible, with embossed golden emblems. The lighting highlights the tactile security features and precise manufacturing, maintained in a clean, clinical regulatory design style."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCQxfoDTYy4MdwmnxGQqR3rcDplFDm1yTotpTuy4mTPt4rjL5bSQeVlV1nWRMvzx32N4vZKokrPMS609HrwOwBuJ1RfvHWDDBoz9vhUPl5Jzi_8m7HVKu9dIcWSXIq6t83J3w7O422y5k9znhn4g2sgHJdMuMLYySviY-7IBNILQCXdoxQNV-Z3iLNw5mF70bk9jSevKpU4e5uFFhViG_um5kGHsenjbLB-MshHy_VQJ4Cg9TCPEWgapHhMjQ5Joey0yIbmyrTZw" />
+                        </div>
+                        <!-- Selfie -->
+                        <div class="group relative rounded-lg border border-outline-variant overflow-hidden">
+                            <div
+                                class="absolute top-3 right-3 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">zoom_in</span></button>
+                                <button
+                                    class="w-8 h-8 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80"><span
+                                        class="material-symbols-outlined text-[20px]">open_in_full</span></button>
+                            </div>
+                            <div
+                                class="bg-surface-container-low p-2 border-b border-outline-variant flex justify-between items-center">
+                                <span class="font-label-md text-label-md text-on-surface-variant">Verification
+                                    Selfie</span>
+                                <span
+                                    class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LIVE
+                                    MATCH</span>
+                            </div>
+                            <img alt="Client Selfie" class="w-full h-64 object-cover object-top cursor-pointer"
+                                data-alt="A clear, frontal selfie of a man holding his passport next to his face for liveness verification. The lighting is natural and bright, ensuring no harsh shadows obscure facial features. The composition is focused and stable, conveying a high-trust digital identification environment with high clarity and detail."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvtjx--TPei8OewYrMPFs382pxGZK1DtDKnk4saLpXY5lKWiuYu5_3FKVTWBHYDODYDUiZ4bs99mdEJXYZOabQ2keUp_2krK3JPrK2RemCq5IN_2lgooXRv8QXL2l1oD8UyGxua8qxscfSe8IXMfv3ujHd6ozbcvhVt_oqLvhNbdQGSijJ_lc0U1zbDQn3MAwJLHZ6jN-jGH1TyiZM_AbBtvz6nhuAv__Oe-k0RGzZjkNoTlorEvrhR6-ZLwagkmrAdZQUSBn7zQ" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- RIGHT COLUMN: Verification Results & Checklist -->
+            <section class="col-span-3 space-y-6">
+                <!-- AI Results -->
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Verification Engine</h2>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-surface-container rounded-lg border border-outline-variant">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-label-md text-label-md text-on-surface-variant">Face Detection</span>
+                                <span
+                                    class="font-bold text-success text-[12px] flex items-center gap-1 text-emerald-600">
+                                    <span class="material-symbols-outlined text-[16px]">check_circle</span> OK
+                                </span>
+                            </div>
+                            <div class="w-full bg-surface-container-highest rounded-full h-1.5">
+                                <div class="bg-emerald-500 h-1.5 rounded-full w-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-surface-container rounded-lg border border-outline-variant">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-label-md text-label-md text-on-surface-variant">Biometric Match</span>
+                                <span class="font-bold text-primary text-[12px]">98%</span>
+                            </div>
+                            <div class="w-full bg-surface-container-highest rounded-full h-1.5">
+                                <div class="bg-primary h-1.5 rounded-full w-[98%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-surface-container rounded-lg border border-outline-variant">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-label-md text-label-md text-on-surface-variant">Document
+                                    Validation</span>
+                                <span
+                                    class="font-bold text-success text-[12px] flex items-center gap-1 text-emerald-600">
+                                    <span class="material-symbols-outlined text-[16px]">verified</span> Valid
+                                </span>
+                            </div>
+                            <div class="w-full bg-surface-container-highest rounded-full h-1.5">
+                                <div class="bg-emerald-500 h-1.5 rounded-full w-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Checklist -->
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Manual Checklist</h2>
+                    <div class="space-y-3">
+                        <label
+                            class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+                            <input class="mt-1 rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant"
+                                type="checkbox" />
+                            <span
+                                class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface">ID
+                                Expiry date is valid (&gt; 6 months)</span>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+                            <input class="mt-1 rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant"
+                                type="checkbox" />
+                            <span
+                                class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface">No
+                                signs of digital tampering/editing</span>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+                            <input class="mt-1 rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant"
+                                type="checkbox" />
+                            <span
+                                class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface">Security
+                                holograms/watermarks visible</span>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+                            <input class="mt-1 rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant"
+                                type="checkbox" />
+                            <span
+                                class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface">Residential
+                                address proof matches ID</span>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+                            <input class="mt-1 rounded text-primary focus:ring-primary h-4 w-4 border-outline-variant"
+                                type="checkbox" />
+                            <span
+                                class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface">Sanctions
+                                list check completed (Clean)</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Bottom Action Bar -->
+    <footer
+        class="fixed bottom-0 right-0 left-[260px] bg-surface-container-lowest border-t border-outline-variant p-6 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+        <div class="max-w-[1440px] mx-auto flex items-end gap-gutter">
+            <div class="flex-grow">
+                <label class="font-label-md text-label-md text-on-surface-variant block mb-2">Reviewer Remarks</label>
+                <textarea
+                    class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+                    placeholder="Enter mandatory notes for approval or specific reason for rejection..."
+                    rows="2"></textarea>
+            </div>
+            <div class="flex gap-4 mb-1">
+                <button
+                    class="px-6 py-3 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary-fixed transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined">refresh</span>
+                    Request Resubmission
+                </button>
+                <button
+                    class="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all active:scale-95 shadow-md flex items-center gap-2">
+                    <span class="material-symbols-outlined">block</span>
+                    Reject KYC
+                </button>
+                <button
+                    class="px-8 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all active:scale-95 shadow-lg flex items-center gap-2">
+                    <span class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Approve KYC
+                </button>
+            </div>
+        </div>
+    </footer>
+    <!-- Micro-interactions Script -->
+    <script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                if (this.innerText.includes('Approve')) {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'absolute inset-0 bg-white/20 animate-ping rounded-xl pointer-events-none';
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 1000);
+                }
+            });
+        });
+
+        // Image zoom mock-effect
+        document.querySelectorAll('img.cursor-pointer').forEach(img => {
+            img.addEventListener('click', function () {
+                this.classList.toggle('scale-105');
+                this.classList.toggle('z-50');
+            });
+        });
+    </script>
+</body>
+
+</html>

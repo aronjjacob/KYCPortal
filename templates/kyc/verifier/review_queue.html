@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KYC Portal - Review Queue</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#0b1c30",
+                        "on-tertiary-fixed": "#001a42",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#444653",
+                        "on-secondary-container": "#5c647a",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "outline": "#757684",
+                        "tertiary-container": "#00489e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-primary-fixed": "#001453",
+                        "tertiary-fixed": "#d8e2ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-primary-fixed-variant": "#173bab",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "primary-fixed": "#dde1ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#9cbbff",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#a8b8ff",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#b8c4ff",
+                        "outline-variant": "#c4c5d5",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "primary-container": "#1e40af",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "secondary-container": "#dae2fd",
+                        "surface-tint": "#3755c3",
+                        "primary": "#00288e",
+                        "surface-container": "#e5eeff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#003272",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max-width": "1440px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code": ["jetbrainsMono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "code": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            /* Slate-50 Level 0 Background */
+        }
+    </style>
+</head>
+
+<body class="font-body-md text-on-surface">
+    <!-- Sidebar Shell -->
+    {%include 'kyc/includes/navbar.html' %}
+    <!-- Main Content Shell -->
+    <main class="ml-[260px] min-h-screen flex flex-col">
+        <!-- Top Navigation Bar -->
+
+        {% include 'kyc/includes/sidebar.html' with sidebar_type='verifier' %}
+        <!-- Canvas Content -->
+        <div class=" p-margin-desktop flex-grow">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg text-primary">Review Queue</h2>
+                    <p class="font-body-md text-on-surface-variant">Manage and process pending identity verification
+                        requests.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md hover:opacity-90 transition-opacity shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">bolt</span>
+                        Assign Next Case
+                    </button>
+                    <button
+                        class="flex items-center justify-center border border-outline px-4 py-2.5 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+                        <span class="material-symbols-outlined">file_download</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Filters Section -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 mb-gutter shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-body-sm font-bold text-on-surface-variant">Status</label>
+                        <select
+                            class="bg-white border border-outline-variant rounded-lg px-3 py-2 font-body-sm focus:ring-2 focus:ring-primary">
+                            <option>All Statuses</option>
+                            <option>Pending</option>
+                            <option>Under Review</option>
+                            <option>Resubmitted</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-body-sm font-bold text-on-surface-variant">Priority</label>
+                        <select
+                            class="bg-white border border-outline-variant rounded-lg px-3 py-2 font-body-sm focus:ring-2 focus:ring-primary">
+                            <option>Any Priority</option>
+                            <option>High</option>
+                            <option>Medium</option>
+                            <option>Low</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-body-sm font-bold text-on-surface-variant">Submission Date</label>
+                        <div class="relative">
+                            <input
+                                class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 font-body-sm focus:ring-2 focus:ring-primary"
+                                type="date" />
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <button
+                            class="w-full bg-surface-container-high text-on-surface px-4 py-2 rounded-lg font-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">filter_alt</span>
+                            Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Table Section -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-outline-variant">
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Submission ID</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Client Name</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Submitted Date</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Type</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Priority</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-4 font-label-md text-label-md uppercase text-on-surface-variant tracking-wider text-right">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant">
+                            <!-- Row 1 -->
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 font-code text-primary">#KYC-9421-B</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-tertiary-container text-white flex items-center justify-center font-bold text-[12px]">
+                                            JD</div>
+                                        <span class="font-body-md font-semibold">Julianna De-Vries</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-body-sm text-on-surface-variant">Oct 24, 2023 14:30</td>
+                                <td class="px-6 py-4 font-body-sm">Personal</td>
+                                <td class="px-6 py-4">
+                                    <span class="flex items-center gap-1.5 text-error font-semibold text-[12px]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                        High
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2.5 py-1 rounded-full bg-surface-container-highest text-primary text-[11px] font-bold uppercase tracking-tight">Pending</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <button class="text-primary hover:underline font-label-md">View Details</button>
+                                        <button
+                                            class="bg-primary text-on-primary px-3 py-1 rounded font-label-md hover:opacity-90">Start
+                                            Review</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-code text-primary px-6 py-4 font-code">#KYC-8812-X</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-[12px]">
+                                            MK</div>
+                                        <span class="font-body-md font-semibold">Marcus Kenter</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-body-sm text-on-surface-variant">Oct 24, 2023 11:15</td>
+                                <td class="px-6 py-4 font-body-sm">Corporate</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="flex items-center gap-1.5 text-on-secondary-fixed-variant font-semibold text-[12px]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Medium
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-[11px] font-bold uppercase tracking-tight">Under
+                                        Review</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <button class="text-primary hover:underline font-label-md">View Details</button>
+                                        <button
+                                            class="border border-primary text-primary px-3 py-1 rounded font-label-md hover:bg-surface-container-low transition-colors">Resume</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 font-code text-primary">#KYC-7403-A</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-[12px]">
+                                            SS</div>
+                                        <span class="font-body-md font-semibold">Sarah Smithson</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-body-sm text-on-surface-variant">Oct 23, 2023 09:45</td>
+                                <td class="px-6 py-4 font-body-sm">Personal</td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="flex items-center gap-1.5 text-on-surface-variant font-semibold text-[12px]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                        Low
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 text-[11px] font-bold uppercase tracking-tight">Resubmitted</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <button class="text-primary hover:underline font-label-md">View Details</button>
+                                        <button
+                                            class="bg-primary text-on-primary px-3 py-1 rounded font-label-md hover:opacity-90">Start
+                                            Review</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 font-code text-primary">#KYC-9011-Y</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-bold text-[12px]">
+                                            EL</div>
+                                        <span class="font-body-md font-semibold">Elena Lombardo</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-body-sm text-on-surface-variant">Oct 22, 2023 16:20</td>
+                                <td class="px-6 py-4 font-body-sm">VIP Personal</td>
+                                <td class="px-6 py-4">
+                                    <span class="flex items-center gap-1.5 text-error font-semibold text-[12px]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                        High
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2.5 py-1 rounded-full bg-surface-container-highest text-primary text-[11px] font-bold uppercase tracking-tight">Pending</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <button class="text-primary hover:underline font-label-md">View Details</button>
+                                        <button
+                                            class="bg-primary text-on-primary px-3 py-1 rounded font-label-md hover:opacity-90">Start
+                                            Review</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
+                    <p class="font-body-sm text-on-surface-variant">Showing <span class="font-bold text-on-surface">1 -
+                            4</span> of <span class="font-bold text-on-surface">124</span> applications</p>
+                    <div class="flex gap-1">
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-white disabled:opacity-50"
+                            disabled="">
+                            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                        </button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md">1</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-white font-label-md">2</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-white font-label-md">3</button>
+                        <span class="px-2 flex items-end">...</span>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-white font-label-md">31</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-white">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <!-- System Status Footer -->
+       
+    </main>
+    <script>
+        // Micro-interactions for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Potential navigation or selection logic
+                console.log('Row clicked');
+            });
+        });
+
+        // Simple Search Simulation
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            document.querySelectorAll('tbody tr').forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(val) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

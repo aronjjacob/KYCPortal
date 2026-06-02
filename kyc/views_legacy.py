@@ -25,20 +25,20 @@ def kyc_upload(request):
         profile_form = KYCProfileForm()
         document_form = KYCDocumentForm()
 
-    return render(request, 'kyc/kyc_upload.html', {
+    return render(request, 'kyc/client/kyc_upload.html', {
         'profile_form': profile_form,
         'document_form': document_form
     })
     
 def kyc_documents(request):
-    return render(request, 'kyc/kyc_documents.html')
+    return render(request, 'kyc/client/kyc_documents.html')
 
 
 def kyc_liveness(request):
-    return render(request, 'kyc/kyc_liveness.html')
+    return render(request, 'kyc/client/kyc_liveness.html')
 
 def kyc_finalize(request):
-    return render(request, 'kyc/kyc_finalize.html')
+    return render(request, 'kyc/client/kyc_finalize.html')
 
 
 
