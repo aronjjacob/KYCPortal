@@ -18,14 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+from accounts import views as accounts_views
+
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', RedirectView.as_view(url='accounts/login/', permanent=False), name='home'),
     path('admin/', admin.site.urls),
+
+    # Admin pages (direct routes)
+    path('admin-dashboard/', accounts_views.admin_dashboard, name='admin_dashboard'),
+    path('admin-management/', accounts_views.admin_management, name='admin_management'),
+    path('admin-manage/', accounts_views.admin_management, name='admin_management_legacy'),
+
+    # Account pages
     path('accounts/', include('accounts.urls')),
-    path('accounts/register', include('accounts.urls')),
+
     path('kyc/', include('kyc.urls')),
 ]
 
