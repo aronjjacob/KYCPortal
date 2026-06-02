@@ -1,25 +1,233 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
 
-{% block content %}
-<h1>Register</h1>
-
-<form method="POST">
-    {% csrf_token %}
-
-    <label>Username</label><br>
-    <input type="text" name="username" required><br><br>
-
-    <label>Email</label><br>
-    <input type="email" name="email" required><br><br>
-
-    <label>Password</label><br>
-    <input type="password" name="password" required><br><br>
-
-    <label>Confirm Password</label><br>
-    <input type="password" name="password_confirm" required><br><br>
-
-    <button type="submit">Register</button>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register - KYC Portal</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#d8e2ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed": "#001453",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "tertiary-container": "#00489e",
+                    "outline": "#757684",
+                    "primary-fixed": "#dde1ff",
+                    "secondary": "#565e74",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#173bab",
+                    "primary-fixed-dim": "#b8c4ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#001a42",
+                    "on-surface": "#0b1c30",
+                    "surface-variant": "#d3e4fe",
+                    "surface-dim": "#cbdbf5",
+                    "on-secondary-container": "#5c647a",
+                    "on-surface-variant": "#444653",
+                    "on-error-container": "#93000a",
+                    "primary": "#00288e",
+                    "surface-tint": "#3755c3",
+                    "surface": "#f8f9ff",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#adc6ff",
+                    "tertiary": "#003272",
+                    "surface-container-high": "#dce9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container": "#e5eeff",
+                    "inverse-primary": "#b8c4ff",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#a8b8ff",
+                    "on-tertiary-container": "#9cbbff",
+                    "background": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "secondary-container": "#dae2fd",
+                    "secondary-fixed": "#dae2fd",
+                    "primary-container": "#1e40af",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#004395",
+                    "surface-container-low": "#eff4ff",
+                    "outline-variant": "#c4c5d5",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "32px",
+                    "container-max-width": "1440px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "code": ["jetbrainsMono"]
+            },
+            "fontSize": {
+                    "headline-sm": ["18px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "code": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 40, 142, 0.03) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 40, 142, 0.03) 0%, transparent 40%);
+        }
+        .role-toggle-active {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col">
+<main class="flex-grow flex items-center justify-center p-margin-mobile md:p-margin-desktop">
+<div class="w-full max-w-[480px] animate-in fade-in slide-in-from-bottom-4 duration-700">
+<!-- Brand Anchor -->
+<div class="text-center mb-8">
+<div class="flex justify-center items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[24px]" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">KYC Portal</h1>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Regulatory identity verification and compliance cloud.</p>
+</div>
+<!-- Register Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="p-8">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-6">Create Account</h2>
+<form class="space-y-6" method="POST">
+{% csrf_token %}
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase" for="username">Username</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="person">person</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md outline-none" id="username" name="username" placeholder="Choose a username" type="text" required/>
+</div>
+</div>
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase" for="email">Email</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="name@company.com" type="email" required/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase" for="password">Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+<input class="w-full pl-12 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="Create a password" type="password" required/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface" type="button" onclick="togglePassword('password', 'passwordIcon')">
+<span class="material-symbols-outlined" id="passwordIcon" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase" for="password_confirm">Confirm Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+<input class="w-full pl-12 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md outline-none" id="password_confirm" name="password_confirm" placeholder="Re-enter your password" type="password" required/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface" type="button" onclick="togglePassword('password_confirm', 'passwordConfirmIcon')">
+<span class="material-symbols-outlined" id="passwordConfirmIcon" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Messages -->
+{% if messages %}
+<div class="p-3 bg-error-container border border-error rounded-lg">
+{% for message in messages %}
+<p class="font-body-sm text-body-sm text-on-error-container">{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
+<!-- Submit Button -->
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-4 rounded-xl hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg shadow-primary/10" type="submit">
+                            Create Account
+                            <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
 </form>
-
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-{% endblock %}
+</div>
+<!-- Secondary Actions -->
+<div class="px-8 py-6 bg-surface-container-low border-t border-outline-variant text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Already have an account? 
+                        <a class="text-primary font-semibold hover:underline" href="{% url 'login' %}">Sign in</a>
+</p>
+</div>
+</div>
+<!-- Security Trust Signal -->
+<div class="mt-8 flex items-center justify-center gap-6 opacity-60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="security">security</span>
+<span class="font-label-md text-label-md uppercase tracking-widest">AES-256 Encrypted</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
+<span class="font-label-md text-label-md uppercase tracking-widest">ISO 27001</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Decorative Elements (Atmospheric) -->
+<div class="fixed bottom-0 left-0 w-full h-[300px] pointer-events-none -z-10 overflow-hidden opacity-40">
+<div class="absolute bottom-[-100px] left-[50%] translate-x-[-50%] w-[1000px] h-[400px] bg-primary/5 blur-[120px] rounded-[100%]"></div>
+</div>
+<script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (!input || !icon) return;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.textContent = "visibility_off";
+            } else {
+                input.type = "password";
+                icon.textContent = "visibility";
+            }
+        }
+    </script>
+</body>
+</html>
