@@ -51,7 +51,7 @@ def kyc_upload(request):
         profile_form = KYCProfileForm(instance=existing_profile)
         document_form = KYCDocumentForm()
 
-    return render(request, 'kyc/kyc_upload.html', {
+    return render(request, 'kyc/client/kyc_upload.html', {
         'profile_form': profile_form,
         'document_form': document_form
     })

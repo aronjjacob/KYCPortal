@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>KYC Portal - Verifier Dashboard</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#d8e2ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed": "#001453",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-container": "#00489e",
+                        "outline": "#757684",
+                        "primary-fixed": "#dde1ff",
+                        "secondary": "#565e74",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#173bab",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed": "#001a42",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary-container": "#5c647a",
+                        "on-surface-variant": "#444653",
+                        "on-error-container": "#93000a",
+                        "primary": "#00288e",
+                        "surface-tint": "#3755c3",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "tertiary": "#003272",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container": "#e5eeff",
+                        "inverse-primary": "#b8c4ff",
+                        "inverse-surface": "#213145",
+                        "on-primary-container": "#a8b8ff",
+                        "on-tertiary-container": "#9cbbff",
+                        "background": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-container": "#dae2fd",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#1e40af",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "surface-container-low": "#eff4ff",
+                        "outline-variant": "#c4c5d5",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "container-max-width": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code": ["jetbrainsMono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "code": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .sidebar-active {
+            background-color: #dae2fd;
+            color: #131b2e;
+            font-weight: 600;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c4c5d5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="font-body-md text-body-md overflow-hidden">
+    <!-- TopNavBar: Execution of style_shell_layout and style_bg_color -->
+    {%include 'kyc/includes/navbar.html' %}
+    <div class="flex h-[calc(100vh-64px)] overflow-hidden">
+        <!-- SideNavBar: Execution of style_shell_layout and tab logic -->
+        <div
+            class="hidden md:flex flex-col p-4 gap-2 w-[260px] bg-surface-container-low border-r border-outline-variant overflow-y-auto custom-scrollbar">
+                 {% include 'kyc/includes/sidebar.html' with sidebar_type='verifier' %}
+        </div>
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-surface-bright p-8 custom-scrollbar">
+            <div class="max-w-[1440px] mx-auto">
+                <!-- Header Section -->
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Verifier Overview</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Welcome back, Alex. You have 42
+                            applications requiring immediate review.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filter
+                        </button>
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">download</span>
+                            Export
+                        </button>
+                    </div>
+                </div>
+                <!-- Bento Grid Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Total Assigned Card -->
+                    <div
+                        class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm transition-transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-2 bg-primary-fixed rounded-lg text-primary">
+                                <span class="material-symbols-outlined">folder_shared</span>
+                            </div>
+                            <span class="font-label-md text-label-md text-on-surface-variant">Last 30 Days</span>
+                        </div>
+                        <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
+                            Total Assigned</h3>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">154</p>
+                        <div class="mt-4 flex items-center gap-2">
+                            <span class="text-green-600 flex items-center text-xs font-semibold">
+                                <span class="material-symbols-outlined text-[14px]">trending_up</span> 12%
+                            </span>
+                            <span class="text-on-surface-variant text-xs italic">vs previous month</span>
+                        </div>
+                    </div>
+                    <!-- Pending Review Card -->
+                    <div
+                        class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm transition-transform hover:-translate-y-1 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 h-1 w-full bg-error"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-2 bg-error-container rounded-lg text-error">
+                                <span class="material-symbols-outlined">pending_actions</span>
+                            </div>
+                            <span
+                                class="bg-error text-white text-[10px] px-2 py-0.5 rounded-full font-bold">URGENT</span>
+                        </div>
+                        <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
+                            Pending Review</h3>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">42</p>
+                        <div class="mt-4 flex items-center gap-2">
+                            <span class="text-on-surface-variant text-xs">8 applications overdue SLA</span>
+                        </div>
+                    </div>
+                    <!-- Completed Today Card -->
+                    <div
+                        class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm transition-transform hover:-translate-y-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-2 bg-secondary-container rounded-lg text-primary">
+                                <span class="material-symbols-outlined">check_circle</span>
+                            </div>
+                            <span class="text-primary text-[10px] font-bold">GOAL: 25</span>
+                        </div>
+                        <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
+                            Completed Today</h3>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">18</p>
+                        <div class="mt-4 w-full bg-surface-container-low rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-primary h-full" style="width: 72%"></div>
+                        </div>
+                        <p class="mt-2 text-on-surface-variant text-[11px] font-medium">72% of daily target reached</p>
+                    </div>
+                </div>
+                <!-- Recent Applications Data Table -->
+                <div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-outline-variant flex justify-between items-center">
+                        <h2 class="font-headline-sm text-headline-sm text-on-surface">Recent KYC Applications</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="font-label-md text-label-md text-on-surface-variant">Displaying 1-10 of
+                                42</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container-low">
+                                    <th
+                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
+                                        Application ID</th>
+                                    <th
+                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
+                                        Applicant Name</th>
+                                    <th
+                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
+                                        Submission Date</th>
+                                    <th
+                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
+                                        Risk Level</th>
+                                    <th
+                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant">
+                                <!-- Row 1 -->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="font-code text-code text-primary font-bold">APP-001234</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold text-xs">
+                                                JD</div>
+                                            <span class="font-body-md text-body-md text-on-surface">Jonathan
+                                                Davies</span>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
+                                        Oct 24, 2023 09:12 AM</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-800">LOW</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <button
+                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="font-code text-code text-primary font-bold">APP-001235</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="h-8 w-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-xs">
+                                                SK</div>
+                                            <span class="font-body-md text-body-md text-on-surface">Sarah Kincaid</span>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
+                                        Oct 24, 2023 10:45 AM</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-800">MEDIUM</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <button
+                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="font-code text-code text-primary font-bold">APP-001236</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="h-8 w-8 rounded-full bg-error-container flex items-center justify-center text-error font-bold text-xs">
+                                                MR</div>
+                                            <span class="font-body-md text-body-md text-on-surface">Marcus Rossi</span>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
+                                        Oct 24, 2023 11:30 AM</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 text-red-800">HIGH</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <button
+                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="font-code text-code text-primary font-bold">APP-001237</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold text-xs">
+                                                LL</div>
+                                            <span class="font-body-md text-body-md text-on-surface">Linda Lawson</span>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
+                                        Oct 24, 2023 01:15 PM</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-800">LOW</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <button
+                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        class="p-4 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="font-label-md text-label-md text-on-surface-variant">Rows per page: 10</span>
+                            <div class="flex items-center gap-1">
+                                <button class="p-1 rounded hover:bg-surface-container-low"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+                                <span
+                                    class="font-label-md text-label-md bg-primary text-on-primary px-2.5 py-0.5 rounded">1</span>
+                                <span
+                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">2</span>
+                                <span
+                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">3</span>
+                                <span class="px-1 text-on-surface-variant">...</span>
+                                <span
+                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">5</span>
+                                <button class="p-1 rounded hover:bg-surface-container-low"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Interactive Layer for Feedback -->
+    <div class="fixed bottom-8 right-8 z-[100] pointer-events-none" id="toast-container"></div>
+    <script>
+        // Micro-interaction: Hover effects on cards
+        document.querySelectorAll('.bg-white.rounded-xl').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+            });
+        });
+
+        // Simple Toast Notification Logic
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-inverse-surface text-inverse-on-surface px-6 py-3 rounded-lg shadow-xl mb-4 flex items-center gap-3 transition-all duration-300 translate-y-10 opacity-0 pointer-events-auto';
+            toast.innerHTML = `
+                <span class="material-symbols-outlined text-green-400">check_circle</span>
+                <span class="font-label-md text-label-md">${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Action button interaction
+        document.querySelectorAll('table button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.closest('tr').querySelector('.font-code').innerText;
+                showToast(`Opening review panel for ${id}...`);
+            });
+        });
+
+        // Add visual interest to sidebar tabs
+        document.querySelectorAll('aside nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!link.classList.contains('bg-secondary-container')) {
+                    document.querySelectorAll('aside nav a').forEach(l => {
+                        l.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+                        l.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                    });
+                    link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                    link.classList.add('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
