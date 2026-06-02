@@ -19,6 +19,10 @@ class KYCDocumentForm(forms.ModelForm):
 
 
 class UserCreateForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
     email = forms.EmailField(required=False)
     is_active = forms.BooleanField(required=False, initial=True)
     is_staff = forms.BooleanField(required=False)
