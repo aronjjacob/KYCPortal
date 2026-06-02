@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+*/venv/
+*/.venv/
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+/media
+/staticfiles
+
+# Editor directories
+.vscode/
+.idea/
+
+# OS generated
+.DS_Store
+Thumbs.db

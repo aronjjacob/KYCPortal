@@ -5,7 +5,7 @@ from .forms import KYCProfileForm, KYCDocumentForm
 
 
 @login_required
-@group_required('Client')
+# @group_required('Client')
 def kyc_upload(request):
     if request.method == 'POST':
         profile_form = KYCProfileForm(request.POST)
@@ -30,10 +30,27 @@ def kyc_upload(request):
         'document_form': document_form
     })
     
-    
+def kyc_documents(request):
+    return render(request, 'kyc/kyc_documents.html')
+
+
+def kyc_liveness(request):
+    return render(request, 'kyc/kyc_liveness.html')
+
+def kyc_finalize(request):
+    return render(request, 'kyc/kyc_finalize.html')
+
+
+
+########################
+#CLIENT
+########################
 @login_required
 def client_dashboard(request):
-    return render(request, 'kyc/client_dashboard.html')
+    return render(request, 'kyc/client/client_dashboard.html')
+
+
+
 
 
 @login_required
