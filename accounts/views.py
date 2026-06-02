@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
+import logging
+
+logger = logging.getLogger(__name__)
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,35 +16,57 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Redirect to admin dashboard if user is staff, otherwise client dashboard
-            if user.is_staff:
-                return redirect('admin_dashboard')
+            # Ensure new/ungrouped users get default 'client' group so middleware redirects work
+            try:
+                from django.contrib.auth.models import Group
+                if not (user.is_staff or user.is_superuser) and not user.groups.exists():
+                    group, created = Group.objects.get_or_create(name='client')
+                    user.groups.add(group)
+                    if created:
+                        logger.info("Created default 'client' group and assigned to %s", username)
+            except Exception:
+                logger.exception('Error ensuring client group for user %s', username)
+            # Log groups for debugging and honor 'next' param if present
+            logger.debug('User %s groups: %s', username, [g.name for g in user.groups.all()])
+            # Honor 'next' param if present (e.g., protected views redirect)
+            next_url = request.POST.get('next') or request.GET.get('next')
+            if next_url:
+                logger.info('Redirecting to next: %s', next_url)
+                return redirect(next_url)
+
+            # Redirect based on user role: superuser/staff → admin, verifier → verifier, client → client
+            if user.is_staff or user.is_superuser:
+                target = reverse('admin_dashboard')
+            elif user.groups.filter(name__iexact='verifier').exists():
+                target = reverse('verifier_dashboard')
             else:
-                return redirect('client_dashboard')
+                target = reverse('client_dashboard')
+
+            logger.info('User %s logged in, redirecting to %s', username, target)
+            messages.success(request, 'Signed in successfully.')
+            return redirect(target)
         else:
             messages.error(request, 'Invalid username or password.')
     return render(request, 'accounts/login.html')
 
 def register_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        password_confirm = request.POST.get('password_confirm')
-        
-        if password != password_confirm:
-            messages.error(request, 'Passwords do not match.')
-            return render(request, 'accounts/register.html')
-        
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists.')
-            return render(request, 'accounts/register.html')
-        
-        user = User.objects.create_user(username=username, email=email, password=password)
-        login(request, user)
-        return redirect('client_dashboard')
+        from kyc.forms import UserRoleSelectionForm
+        form = UserRoleSelectionForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Account created successfully.')
+            return redirect('client_dashboard')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    else:
+        from kyc.forms import UserRoleSelectionForm
+        form = UserRoleSelectionForm()
     
-    return render(request, 'accounts/register.html')
+    return render(request, 'accounts/register.html', {'form': form})
 
 @csrf_protect
 @login_required(login_url='login')

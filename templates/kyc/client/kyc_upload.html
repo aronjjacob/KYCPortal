@@ -148,72 +148,101 @@
                 Please provide your legal details exactly as they appear on your government-issued ID.
               </p>
             </div>
-            <form class="p-8 space-y-8">
+            <form method="POST" action="{% url 'kyc_upload' %}" class="p-8 space-y-8">
+              {% csrf_token %}
               <div class="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6">
                 <!-- Full Name -->
                 <div class="col-span-1 md:col-span-2 space-y-2">
-                  <label class="block font-body-sm font-bold text-on-surface">Full Name (Legal)</label>
+                  <label for="id_full_name" class="block font-body-sm font-bold text-on-surface">Full Name (Legal)</label>
                   <input
+                    id="id_full_name"
+                    name="full_name"
                     class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                     placeholder="e.g. Johnathan David Doe"
                     required
                     type="text"
+                    value="{{ profile_form.full_name.value|default:'' }}"
                   />
-                  <p class="text-[11px] text-on-surface-variant mt-1">Include middle names if applicable.</p>
+                  {% if profile_form.full_name.errors %}
+                    <p class="text-[11px] text-error mt-1">{{ profile_form.full_name.errors.0 }}</p>
+                  {% else %}
+                    <p class="text-[11px] text-on-surface-variant mt-1">Include middle names if applicable.</p>
+                  {% endif %}
                 </div>
 
                 <!-- Date of Birth -->
                 <div class="space-y-2">
-                  <label class="block font-body-sm font-bold text-on-surface">Date of Birth</label>
+                  <label for="id_date_of_birth" class="block font-body-sm font-bold text-on-surface">Date of Birth</label>
                   <div class="relative">
                     <input
+                      id="id_date_of_birth"
+                      name="date_of_birth"
                       class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                       required
                       type="date"
+                      value="{{ profile_form.date_of_birth.value|default:'' }}"
                     />
                   </div>
+                  {% if profile_form.date_of_birth.errors %}
+                    <p class="text-[11px] text-error mt-1">{{ profile_form.date_of_birth.errors.0 }}</p>
+                  {% endif %}
                 </div>
 
                 <!-- Gender -->
                 <div class="space-y-2">
-                  <label class="block font-body-sm font-bold text-on-surface">Gender</label>
-                  <select class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
-                    <option disabled selected value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
+                  <label for="id_gender" class="block font-body-sm font-bold text-on-surface">Gender</label>
+                  <select id="id_gender" name="gender" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
+                    <option disabled value="" {% if profile_form.gender.value|default:'' == '' %}selected{% endif %}>Select gender</option>
+                    <option value="male" {% if profile_form.gender.value == 'male' %}selected{% endif %}>Male</option>
+                    <option value="female" {% if profile_form.gender.value == 'female' %}selected{% endif %}>Female</option>
+                    <option value="other" {% if profile_form.gender.value == 'other' %}selected{% endif %}>Other</option>
+                    <option value="prefer_not_to_say" {% if profile_form.gender.value == 'prefer_not_to_say' %}selected{% endif %}>Prefer not to say</option>
                   </select>
+                  {% if profile_form.gender.errors %}
+                    <p class="text-[11px] text-error mt-1">{{ profile_form.gender.errors.0 }}</p>
+                  {% endif %}
                 </div>
 
                 <!-- Email Address -->
                 <div class="space-y-2">
-                  <label class="block font-body-sm font-bold text-on-surface">Email Address</label>
+                  <label for="id_email" class="block font-body-sm font-bold text-on-surface">Email Address</label>
                   <input
+                    id="id_email"
+                    name="email"
                     class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                     placeholder="john.doe@example.com"
                     required
                     type="email"
+                    value="{{ profile_form.email.value|default:'' }}"
                   />
+                  {% if profile_form.email.errors %}
+                    <p class="text-[11px] text-error mt-1">{{ profile_form.email.errors.0 }}</p>
+                  {% endif %}
                 </div>
 
                 <!-- Contact Number -->
                 <div class="space-y-2">
                   <label class="block font-body-sm font-bold text-on-surface">Contact Number</label>
                   <div class="flex gap-2">
-                    <select class="w-24 px-2 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
-                      <option value="+1">+1 US</option>
-                      <option value="+44">+44 UK</option>
-                      <option value="+91">+91 IN</option>
-                      <option value="+61">+61 AU</option>
+                    <select id="id_phone_country_code" name="phone_country_code" class="w-24 px-2 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
+                      <option value="+1" {% if profile_form.phone_country_code.value == '+1' %}selected{% endif %}>+1 US</option>
+                      <option value="+44" {% if profile_form.phone_country_code.value == '+44' %}selected{% endif %}>+44 UK</option>
+                      <option value="+91" {% if profile_form.phone_country_code.value == '+91' %}selected{% endif %}>+91 IN</option>
+                      <option value="+61" {% if profile_form.phone_country_code.value == '+61' %}selected{% endif %}>+61 AU</option>
                     </select>
                     <input
+                      id="id_phone_number"
+                      name="phone_number"
                       class="flex-1 px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                       placeholder="000 000 0000"
                       required
                       type="tel"
+                      value="{{ profile_form.phone_number.value|default:'' }}"
                     />
                   </div>
+                  {% if profile_form.phone_number.errors %}
+                    <p class="text-[11px] text-error mt-1">{{ profile_form.phone_number.errors.0 }}</p>
+                  {% endif %}
                 </div>
 
                 <!-- Full Address -->
@@ -224,42 +253,64 @@
                   </div>
                   <div class="space-y-4">
                     <div class="space-y-2">
-                      <label class="block font-body-sm text-on-surface-variant">Street Address</label>
+                      <label for="id_street_address" class="block font-body-sm text-on-surface-variant">Street Address</label>
                       <input
+                        id="id_street_address"
+                        name="street_address"
                         class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                         placeholder="House no, Street name, Locality"
                         required
                         type="text"
+                        value="{{ profile_form.street_address.value|default:'' }}"
                       />
+                    {% if profile_form.street_address.errors %}
+                      <p class="text-[11px] text-error mt-1">{{ profile_form.street_address.errors.0 }}</p>
+                    {% endif %}
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                       <div class="space-y-2">
-                        <label class="block font-body-sm text-on-surface-variant">City</label>
+                        <label for="id_city" class="block font-body-sm text-on-surface-variant">City</label>
                         <input
+                          id="id_city"
+                          name="city"
                           class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                           placeholder="City"
                           required
                           type="text"
+                          value="{{ profile_form.city.value|default:'' }}"
                         />
+                        {% if profile_form.city.errors %}
+                          <p class="text-[11px] text-error mt-1">{{ profile_form.city.errors.0 }}</p>
+                        {% endif %}
                       </div>
                       <div class="space-y-2">
-                        <label class="block font-body-sm text-on-surface-variant">Postal Code</label>
+                        <label for="id_postal_code" class="block font-body-sm text-on-surface-variant">Postal Code</label>
                         <input
+                          id="id_postal_code"
+                          name="postal_code"
                           class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md"
                           placeholder="Zip/Postal"
                           required
                           type="text"
+                          value="{{ profile_form.postal_code.value|default:'' }}"
                         />
+                        {% if profile_form.postal_code.errors %}
+                          <p class="text-[11px] text-error mt-1">{{ profile_form.postal_code.errors.0 }}</p>
+                        {% endif %}
                       </div>
                     </div>
                     <div class="space-y-2">
-                      <label class="block font-body-sm text-on-surface-variant">Country</label>
-                      <select class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
-                        <option value="usa">United States</option>
-                        <option value="uk">United Kingdom</option>
-                        <option value="can">Canada</option>
-                        <option value="aus">Australia</option>
+                      <label for="id_country" class="block font-body-sm text-on-surface-variant">Country</label>
+                      <select id="id_country" name="country" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest form-input-focus transition-all text-body-md">
+                        <option value="">Select country</option>
+                        <option value="USA" {% if profile_form.country.value == 'USA' %}selected{% endif %}>United States</option>
+                        <option value="UK" {% if profile_form.country.value == 'UK' %}selected{% endif %}>United Kingdom</option>
+                        <option value="CAN" {% if profile_form.country.value == 'CAN' %}selected{% endif %}>Canada</option>
+                        <option value="AUS" {% if profile_form.country.value == 'AUS' %}selected{% endif %}>Australia</option>
                       </select>
+                      {% if profile_form.country.errors %}
+                        <p class="text-[11px] text-error mt-1">{{ profile_form.country.errors.0 }}</p>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -278,12 +329,12 @@
                   >
                     Save Draft
                   </button>
-                  <a href="{% url 'kyc_documents' %}"
+                  <button
                     class="flex-1 md:flex-none px-10 py-3 rounded-xl font-label-md text-label-md bg-primary text-on-primary hover:opacity-90 shadow-md transition-all active:scale-[0.98]"
                     type="submit"
                   >
                     Next Step
-                </a>
+                  </button>
                 </div>
               </div>
             </form>
@@ -330,7 +381,6 @@
       // Simple stepper logic visualization
       const form = document.querySelector('form');
       form.addEventListener('submit', (e) => {
-        e.preventDefault();
         // Animation for transition could be added here
         console.log('Moving to Step 2...');
       });

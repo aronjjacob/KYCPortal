@@ -138,7 +138,7 @@ def admin_dashboard(request):
 
 
 @login_required
-# @group_required('Verifier', 'Manager')
+@group_required('Verifier', 'Manager')
 def user_management(request):
     User = get_user_model()
     users = User.objects.all().prefetch_related('groups').order_by('username')
@@ -202,7 +202,7 @@ def user_management(request):
 
 
 @login_required
-# @group_required('Verifier', 'Manager')
+@group_required('Verifier', 'Manager')
 def document_review(request, pk):
     profile = get_object_or_404(KYCProfile, pk=pk)
     documents = profile.documents.all().order_by('-uploaded_at')
@@ -261,7 +261,7 @@ def document_detail(request, pk):
 
 
 @login_required
-# @group_required('Manager')
+@group_required('Manager')
 def bulk_update_status(request):
     if request.method == 'POST':
         selected_profiles = request.POST.getlist('selected_profiles')

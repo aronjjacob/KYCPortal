@@ -1,5 +1,11 @@
-from .client import kyc_upload, kyc_documents, kyc_liveness, kyc_finalize, client_dashboard
-from .admin import admin_dashboard, document_review
+from .client import kyc_upload, kyc_documents, kyc_liveness, kyc_finalize, kyc_status, client_dashboard
+from .admin import (
+    admin_dashboard,
+    document_review,
+    user_management,
+    document_detail,
+    bulk_update_status,
+)
 from .verifier import (
     verifier_dashboard,
     verifier_review_queue,
@@ -8,13 +14,20 @@ from .verifier import (
 )
 
 __all__ = [
+    # Client views
     "kyc_upload",
     "kyc_documents",
     "kyc_liveness",
     "kyc_finalize",
+    "kyc_status",
     "client_dashboard",
+    # Admin views
     "admin_dashboard",
     "document_review",
+    "user_management",
+    "document_detail",
+    "bulk_update_status",
+    # Verifier views
     "verifier_dashboard",
     "verifier_review_queue",
     "verifier_document_review",
