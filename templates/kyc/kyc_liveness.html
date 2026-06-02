@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KYC Portal - Liveness Verification</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Hanken+Grotesk:wght@600;700&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#0b1c30",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#9cbbff",
+              "secondary-fixed-dim": "#bec6e0",
+              "primary-fixed-dim": "#b8c4ff",
+              "on-primary-fixed-variant": "#173bab",
+              secondary: "#565e74",
+              "surface-container-low": "#eff4ff",
+              "surface-bright": "#f8f9ff",
+              "inverse-surface": "#213145",
+              error: "#ba1a1a",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-container": "#a8b8ff",
+              "on-error-container": "#93000a",
+              "secondary-container": "#dae2fd",
+              "tertiary-fixed-dim": "#adc6ff",
+              background: "#f8f9ff",
+              "on-surface-variant": "#444653",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "outline-variant": "#c4c5d5",
+              "on-tertiary-fixed": "#001a42",
+              "surface-tint": "#3755c3",
+              "on-secondary-container": "#5c647a",
+              "surface-container-high": "#dce9ff",
+              "surface-dim": "#cbdbf5",
+              "secondary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#004395",
+              outline: "#757684",
+              "inverse-primary": "#b8c4ff",
+              primary: "#00288e",
+              "on-tertiary": "#ffffff",
+              "on-background": "#0b1c30",
+              "primary-container": "#1e40af",
+              "surface-variant": "#d3e4fe",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed-variant": "#3f465c",
+              "error-container": "#ffdad6",
+              surface: "#f8f9ff",
+              "on-primary-fixed": "#001453",
+              "tertiary-container": "#00489e",
+              "surface-container": "#e5eeff",
+              "primary-fixed": "#dde1ff",
+              "tertiary-fixed": "#d8e2ff",
+              "on-secondary-fixed": "#131b2e",
+              "inverse-on-surface": "#eaf1ff",
+              tertiary: "#003272"
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem"
+            },
+            spacing: {
+              "container-max-width": "1440px",
+              "margin-mobile": "16px",
+              gutter: "24px",
+              "margin-desktop": "32px",
+              unit: "4px"
+            },
+            fontFamily: {
+              code: ["jetbrainsMono"],
+              "headline-lg": ["Hanken Grotesk"],
+              "headline-sm": ["Hanken Grotesk"],
+              "body-md": ["Inter"],
+              "body-sm": ["Inter"],
+              "label-md": ["Inter"],
+              "headline-lg-mobile": ["Hanken Grotesk"],
+              "body-lg": ["Inter"],
+              "headline-md": ["Hanken Grotesk"]
+            },
+            fontSize: {
+              code: ["13px", { lineHeight: "1.5", fontWeight: "400" }],
+              "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+              "headline-sm": ["18px", { lineHeight: "1.4", fontWeight: "600" }],
+              "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+              "body-sm": ["13px", { lineHeight: "1.5", fontWeight: "400" }],
+              "label-md": ["12px", { lineHeight: "1", letterSpacing: "0.02em", fontWeight: "600" }],
+              "headline-lg-mobile": ["24px", { lineHeight: "1.2", fontWeight: "700" }],
+              "body-lg": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+              "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      .camera-mask {
+        clip-path: path('M 0 0 H 1000 V 1000 H 0 Z M 500 200 C 350 200 250 350 250 500 C 250 650 350 800 500 800 C 650 800 750 650 750 500 C 750 350 650 200 500 200 Z');
+        background: rgba(11, 28, 48, 0.7);
+      }
+
+      @keyframes pulse-ring {
+        0% {
+          transform: scale(0.95);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(0.95);
+          opacity: 0.5;
+        }
+      }
+
+      .scanning-line {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #3755c3, transparent);
+        box-shadow: 0 0 15px #3755c3;
+        animation: scan 3s ease-in-out infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          top: 20%;
+        }
+        50% {
+          top: 80%;
+        }
+        100% {
+          top: 20%;
+        }
+      }
+
+      .biometric-frame {
+        border: 2px solid rgba(55, 85, 195, 0.3);
+        border-radius: 50% / 40%;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background text-on-background min-h-screen font-body-md">
+    <header class="sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop bg-surface-container-lowest h-16 border-b border-outline-variant">
+      <div class="flex items-center gap-4">
+        <span class="font-headline-md text-headline-md font-bold text-primary">KYC Portal</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="hidden md:flex items-center gap-4">
+          <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+          <span class="material-symbols-outlined text-on-surface-variant">help</span>
+        </div>
+        <button class="font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-low px-4 py-2 transition-colors duration-200 rounded-xl">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 min-h-[calc(100vh-64px)] bg-background px-margin-mobile md:px-margin-desktop lg:ml-[260px]">
+      {% include 'kyc/includes/sidebar.html' with sidebar_type='client' %}
+      <div class="max-w-[1200px] mx-auto py-8">
+        {% include 'kyc/includes/stepper.html' %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+          <div class="lg:col-span-7 flex flex-col gap-6">
+            <section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+              <div class="p-6 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+                <div>
+                  <h1 class="font-headline-sm text-headline-sm text-on-surface">Biometric Check</h1>
+                  <p class="text-body-sm text-on-surface-variant mt-2">Use the live camera or upload a photo manually to complete the liveness verification step.</p>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-outline-variant">
+                  <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                  <span class="font-label-md text-label-md text-on-surface-variant">LIVE FEED</span>
+                </div>
+              </div>
+
+              <div class="relative aspect-[4/3] bg-on-surface flex items-center justify-center overflow-hidden">
+                <img
+                  alt="Live camera feed placeholder"
+                  class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[0.3]"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDclefIRmpwRE5hZKy3vqRowFXnLwgYgpDcr4ThXu1r9nZIgCg50UwsBKziUyHgMPgl-3Do7lBO3wqfikXYibEaQ-kDAc8VXWz0XQBPlXtaqYY2NbT737LfN-t0y5jbW_M1EcycBXaah3HKCztjoGIBy2DKdmf4czUK-SKx2oHgbHkWVGX_IJ5iWzXB_19s5mwSPIcT_1xmK6bw_fxHckNu6rsvA96jUF2dvWOE00rHEFUVnWAlM2XMsPHiobr1_okzcEGoDxUIwA"
+                />
+                <div class="absolute inset-0 pointer-events-none">
+                  <div class="absolute inset-0 camera-mask"></div>
+                  <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[360px] biometric-frame">
+                    <div class="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary-container rounded-tl-lg"></div>
+                    <div class="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary-container rounded-tr-lg"></div>
+                    <div class="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary-container rounded-bl-lg"></div>
+                    <div class="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary-container rounded-br-lg"></div>
+                    <div class="absolute w-full scanning-line"></div>
+                  </div>
+                </div>
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-on-surface/80 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary-fixed-dim">face</span>
+                  <span class="text-white font-body-md">Center your face within the frame</span>
+                </div>
+              </div>
+
+              <div class="p-8 flex flex-col gap-4 md:flex-row items-center justify-center bg-surface-container-lowest">
+                <button
+                  class="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-3 rounded-xl font-body-lg hover:bg-primary-container transition-all shadow-md active:scale-95"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined">photo_camera</span>
+                  Take Photo
+                </button>
+                <button
+                  class="w-full md:w-auto flex items-center justify-center gap-2 border border-primary text-primary px-8 py-3 rounded-xl font-body-lg hover:bg-surface-container-low transition-all active:scale-95"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined">upload</span>
+                  Upload Manually
+                </button>
+                <a href="{% url 'kyc_finalize' %}"
+                  class="w-full md:w-auto flex items-center justify-center gap-2 bg-primary-container text-on-primary px-8 py-3 rounded-xl font-body-lg hover:bg-primary transition-all shadow-sm active:scale-95"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined">check_circle</span>
+                  Finalize
+            </a>
+              </div>
+            </section>
+          </div>
+
+          <aside class="lg:col-span-5 flex flex-col gap-6">
+            <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+              <h2 class="font-headline-sm text-headline-sm text-on-surface mb-6">Capture Requirements</h2>
+              <ul class="space-y-6">
+                <li class="flex gap-4">
+                  <div class="w-10 h-10 rounded-full bg-surface-container-low flex-shrink-0 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">light_mode</span>
+                  </div>
+                  <div>
+                    <h3 class="font-body-md font-bold text-on-surface">Good Lighting</h3>
+                    <p class="font-body-sm text-on-surface-variant">Ensure your face is evenly lit. Avoid strong backlighting or deep shadows.</p>
+                  </div>
+                </li>
+                <li class="flex gap-4">
+                  <div class="w-10 h-10 rounded-full bg-surface-container-low flex-shrink-0 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">eyeglasses</span>
+                  </div>
+                  <div>
+                    <h3 class="font-body-md font-bold text-on-surface">Remove Obstructions</h3>
+                    <p class="font-body-sm text-on-surface-variant">Remove glasses, hats, or masks that may obscure facial features.</p>
+                  </div>
+                </li>
+                <li class="flex gap-4">
+                  <div class="w-10 h-10 rounded-full bg-surface-container-low flex-shrink-0 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">person_pin</span>
+                  </div>
+                  <div>
+                    <h3 class="font-body-md font-bold text-on-surface">Neutral Expression</h3>
+                    <p class="font-body-sm text-on-surface-variant">Maintain a neutral expression and look directly at the camera.</p>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="mt-8 p-4 bg-surface-container rounded-lg border border-outline-variant/30">
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+                  <p class="font-label-md text-label-md text-on-secondary-container">
+                    Your biometric data is encrypted and processed according to bank-grade security standards. It is only used for one-time verification.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="bg-primary-container/10 border border-primary-container/20 rounded-xl p-6 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">support_agent</span>
+                <div>
+                  <p class="font-body-sm font-bold text-primary">Having trouble?</p>
+                  <p class="font-label-md text-on-surface-variant">Contact our compliance support team</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-primary-container cursor-pointer hover:translate-x-1 transition-transform">chevron_right</span>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-auto py-8 bg-surface-container-low border-t border-outline-variant flex flex-col items-center">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-on-surface-variant text-[16px]">lock</span>
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">End-to-End Encrypted Session</span>
+      </div>
+      <p class="font-label-md text-label-md text-on-surface-variant/60">KYC Verify Regulatory Cloud • v2.4.0</p>
+    </footer>
+
+    <script>
+      const scanningLine = document.querySelector('.scanning-line');
+      if (scanningLine) {
+        setInterval(() => {
+          scanningLine.style.opacity = 0.5 + Math.random() * 0.5;
+        }, 100);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<header class="sticky top-0 z-50 flex items-center justify-between bg-surface-container-lowest border-b border-outline-variant px-margin-mobile md:px-margin-desktop h-16">
+  <div class="flex items-center gap-4">
+    <span class="font-headline-md text-headline-md font-bold text-primary">KYC Portal</span>
+  </div>
+  <div class="flex items-center gap-3">
+    <button class="hidden md:inline-flex items-center gap-2 rounded-xl px-4 py-2 text-on-surface-variant hover:bg-surface-container-low transition-all" type="button">
+      <span class="material-symbols-outlined">help</span>
+      Support
+    </button>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="rounded-xl bg-primary px-4 py-2 text-white hover:bg-primary-container transition-all" type="submit">
+          Logout
+        </button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}" class="rounded-xl bg-primary px-4 py-2 text-white hover:bg-primary-container transition-all">Login</a>
+      <a href="{% url 'register' %}" class="rounded-xl px-4 py-2 text-on-surface-variant hover:bg-surface-container-low transition-all">Register</a>
+    {% endif %}
+  </div>
+</header>
