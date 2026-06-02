@@ -9,6 +9,19 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 
+def _get_dashboard_redirect(user):
+    if user.is_superuser or user.is_staff:
+        return reverse('admin_dashboard')
+
+    if user.groups.filter(name='Verifier').exists():
+        return reverse('verifier_dashboard')
+
+    if user.groups.filter(name='Manager').exists():
+        return reverse('admin_dashboard')
+
+    return reverse('client_dashboard')
+
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -16,32 +29,23 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Ensure new/ungrouped users get default 'client' group so middleware redirects work
+            # Ensure new/ungrouped users get a default client group so role redirect works.
             try:
                 from django.contrib.auth.models import Group
                 if not (user.is_staff or user.is_superuser) and not user.groups.exists():
-                    group, created = Group.objects.get_or_create(name='client')
+                    group, created = Group.objects.get_or_create(name='Client')
                     user.groups.add(group)
                     if created:
-                        logger.info("Created default 'client' group and assigned to %s", username)
+                        logger.info("Created default 'Client' group and assigned to %s", username)
             except Exception:
                 logger.exception('Error ensuring client group for user %s', username)
-            # Log groups for debugging and honor 'next' param if present
-            logger.debug('User %s groups: %s', username, [g.name for g in user.groups.all()])
-            # Honor 'next' param if present (e.g., protected views redirect)
+
             next_url = request.POST.get('next') or request.GET.get('next')
             if next_url:
                 logger.info('Redirecting to next: %s', next_url)
                 return redirect(next_url)
 
-            # Redirect based on user role: superuser/staff → admin, verifier → verifier, client → client
-            if user.is_staff or user.is_superuser:
-                target = reverse('admin_dashboard')
-            elif user.groups.filter(name__iexact='verifier').exists():
-                target = reverse('verifier_dashboard')
-            else:
-                target = reverse('client_dashboard')
-
+            target = _get_dashboard_redirect(user)
             logger.info('User %s logged in, redirecting to %s', username, target)
             messages.success(request, 'Signed in successfully.')
             return redirect(target)

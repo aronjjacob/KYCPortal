@@ -1,3 +1,5 @@
+def document_review(request):
+def user_management(request):
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -20,52 +22,27 @@ class AdminDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profiles = KYCProfile.objects.all().order_by('-created_at')
-        
+
         context['profiles'] = profiles
         context['total_profiles'] = profiles.count()
         context['pending_count'] = profiles.filter(status='Pending').count()
         context['approved_count'] = profiles.filter(status='Approved').count()
         context['rejected_count'] = profiles.filter(status='Rejected').count()
         context['under_review_count'] = profiles.filter(status='Under Review').count()
-        
+
         return context
 
 
-@method_decorator([login_required, group_required('verifier')], name='dispatch')
-class UserManagementView(View):
-    """Manage users: create, update, delete with group assignments."""
+@login_required
+def user_management(request):
+    User = get_user_model()
+    users = User.objects.all().prefetch_related('groups').order_by('username')
 
-    def get(self, request, *args, **kwargs):
-        User = get_user_model()
-        users = User.objects.all().prefetch_related('groups').order_by('username')
-        
-        edit_user = None
-        edit_form = None
-        create_form = UserCreateForm()
-        
-        edit_id = request.GET.get('edit')
-        if edit_id:
-            edit_user = get_object_or_404(User, pk=edit_id)
-            edit_form = UserUpdateForm(instance=edit_user)
-        
-        total_users = users.count()
-        active_users = users.filter(is_active=True).count()
-        staff_users = users.filter(is_staff=True).count()
-        super_users = users.filter(is_superuser=True).count()
-        
-        return render(request, 'kyc/admin/user_management.html', {
-            'users': users,
-            'total_users': total_users,
-            'active_users': active_users,
-            'staff_users': staff_users,
-            'super_users': super_users,
-            'create_form': create_form,
-            'edit_user': edit_user,
-            'edit_form': edit_form,
-        })
+    edit_user = None
+    edit_form = None
+    create_form = UserCreateForm()
 
-    def post(self, request, *args, **kwargs):
-        User = get_user_model()
+    if request.method == 'POST':
         action = request.POST.get('action')
 
         if action == 'create':
@@ -100,6 +77,28 @@ class UserManagementView(View):
 
         return redirect('user_management')
 
+    if request.method == 'GET':
+        edit_id = request.GET.get('edit')
+        if edit_id:
+            edit_user = get_object_or_404(User, pk=edit_id)
+            edit_form = UserUpdateForm(instance=edit_user)
+
+    total_users = users.count()
+    active_users = users.filter(is_active=True).count()
+    staff_users = users.filter(is_staff=True).count()
+    super_users = users.filter(is_superuser=True).count()
+
+    return render(request, 'kyc/admin/user_management.html', {
+        'users': users,
+        'total_users': total_users,
+        'active_users': active_users,
+        'staff_users': staff_users,
+        'super_users': super_users,
+        'create_form': create_form,
+        'edit_user': edit_user,
+        'edit_form': edit_form,
+    })
+
 
 @method_decorator([login_required, group_required('verifier')], name='dispatch')
 class DocumentReviewView(View):
@@ -119,7 +118,7 @@ class DocumentReviewView(View):
     def post(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(KYCProfile, pk=pk)
         documents = profile.documents.all().order_by('-uploaded_at')
-        
+
         action = request.POST.get('action')
         remarks = request.POST.get('remarks', '')
 
@@ -190,9 +189,9 @@ class BulkUpdateStatusView(View):
         return redirect('admin_dashboard')
 
 
-# Export as_view() with original names for URL compatibility
+# Export views for URL compatibility
 admin_dashboard = AdminDashboardView.as_view()
-user_management = UserManagementView.as_view()
+user_management = user_management
 document_review = DocumentReviewView.as_view()
 document_detail = DocumentDetailView.as_view()
 bulk_update_status = BulkUpdateStatusView.as_view()
