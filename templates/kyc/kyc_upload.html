@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>KYC Document Upload</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h3>Personal Information</h3>
+    {{ profile_form.as_p }}
+
+    <h3>Document Upload</h3>
+    {{ document_form.as_p }}
+
+    <button type="submit">Submit KYC</button>
+</form>
+{% endblock %}
