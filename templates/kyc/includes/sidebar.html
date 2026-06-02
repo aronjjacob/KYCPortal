@@ -19,23 +19,19 @@
 
   <nav class="flex-1 flex flex-col gap-1">
     {% if sidebar_type == 'admin' %}
-      <a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-xl transition-all" href="{% url 'admin_dashboard' %}">
+      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'admin_dashboard' %}bg-secondary-container text-on-secondary-container font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} rounded-xl transition-all" href="{% url 'admin_dashboard' %}">
         <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
         <span class="text-[12px]">Dashboard</span>
       </a>
-      <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="{% url 'admin_dashboard' %}">
+      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'document_review' %}bg-secondary-container text-on-secondary-container font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} rounded-xl transition-all" href="{% url 'document_review' %}">
         <span class="material-symbols-outlined" data-icon="description">description</span>
         <span class="text-[12px]">Review Documents</span>
       </a>
-      <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="{% url 'user_management' %}">
+      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'user_management' %}bg-secondary-container text-on-secondary-container font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} rounded-xl transition-all" href="{% url 'user_management' %}">
         <span class="material-symbols-outlined" data-icon="people">people</span>
         <span class="text-[12px]">User Management</span>
       </a>
-      <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
-        <span class="material-symbols-outlined" data-icon="assessment">assessment</span>
-        <span class="text-[12px]">Reports</span>
-      </a>
-      <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
+      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'settings' %}bg-secondary-container text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
         <span class="material-symbols-outlined" data-icon="settings">settings</span>
         <span class="text-[12px]">Settings</span>
       </a>

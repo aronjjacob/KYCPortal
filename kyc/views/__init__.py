@@ -1,5 +1,5 @@
 from .client import kyc_upload, kyc_documents, kyc_liveness, kyc_finalize, client_dashboard
-from .admin import admin_dashboard, document_review
+from .admin import admin_dashboard, document_review, user_management
 from .verifier import (
     verifier_dashboard,
     verifier_review_queue,

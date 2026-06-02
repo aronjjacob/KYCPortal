@@ -18,11 +18,6 @@ urlpatterns = [
     path('verifier-verification-history/', views.verifier_verification_history, name='verifier_verification_history'),
 
 
-
-
-
-
-
     # Admin URLs
 
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
