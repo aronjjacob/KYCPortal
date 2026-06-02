@@ -7,4 +7,8 @@ python-dotenv==1.2.2
 dj-database-url==1.0.0
 gunicorn==22.0.0
 whitenoise==6.5.0
-psycopg2-binary==2.9.7
+psycopg[binary]==3.3.4
+django-axes==6.1.0
+django-ratelimit==4.0.0
+
+

@@ -4,11 +4,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 from django.contrib.auth import authenticate, login, logout
+from django_ratelimit.decorators import ratelimit
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
+@ratelimit(key='post:username', rate='5/m', method='POST', block=True)
 def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
@@ -69,7 +73,7 @@ def register_view(request):
         form = UserRoleSelectionForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Account created successfully.')
             return redirect('client_dashboard')
         else:
