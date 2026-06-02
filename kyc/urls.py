@@ -9,6 +9,7 @@ urlpatterns = [
     path('documents/', views.kyc_documents, name='kyc_documents'),
     path('liveness/', views.kyc_liveness, name='kyc_liveness'),
     path('finalize/', views.kyc_finalize, name='kyc_finalize'),
+    path('status/', views.kyc_status, name='kyc_status'),
    
    # Verifier URLs
    

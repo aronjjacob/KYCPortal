@@ -209,29 +209,28 @@
                                 <span class="material-symbols-outlined">person</span>
                                 Personal Information
                             </h3>
-                            <button class="text-primary font-label-md hover:underline">Edit</button>
+                            <button type="button" onclick="window.location.href='{% url 'kyc_upload' %}';" class="text-primary font-label-md hover:underline">Edit</button>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
                             <div>
                                 <p class="text-on-surface-variant font-label-md uppercase mb-1">Full Name</p>
-                                <p class="font-body-md font-semibold">Jonathan David Sterling</p>
+                                <p class="font-body-md font-semibold">{{ profile.full_name }}</p>
                             </div>
                             <div>
                                 <p class="text-on-surface-variant font-label-md uppercase mb-1">Date of Birth</p>
-                                <p class="font-body-md font-semibold">May 14, 1988</p>
+                                <p class="font-body-md font-semibold">{{ profile.date_of_birth|date:"F j, Y" }}</p>
                             </div>
                             <div>
                                 <p class="text-on-surface-variant font-label-md uppercase mb-1">Nationality</p>
-                                <p class="font-body-md font-semibold">United Kingdom</p>
+                                <p class="font-body-md font-semibold">{{ profile.country }}</p>
                             </div>
                             <div>
                                 <p class="text-on-surface-variant font-label-md uppercase mb-1">Gender</p>
-                                <p class="font-body-md font-semibold">Male</p>
+                                <p class="font-body-md font-semibold">{{ profile.get_gender_display }}</p>
                             </div>
                             <div class="sm:col-span-2">
                                 <p class="text-on-surface-variant font-label-md uppercase mb-1">Residential Address</p>
-                                <p class="font-body-md font-semibold">24 Baker Street, Marylebone, London NW1 6XE,
-                                    United Kingdom</p>
+                                <p class="font-body-md font-semibold">{% if profile.address %}{{ profile.address }}{% else %}{{ profile.street_address }}{% if profile.city %}, {{ profile.city }}{% endif %}{% if profile.postal_code %} {{ profile.postal_code }}{% endif %}{% if profile.country %}, {{ profile.country }}{% endif %}{% endif %}</p>
                             </div>
                         </div>
                     </div>
@@ -243,7 +242,7 @@
                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-primary">
                                 <img alt="Liveness preview" class="w-full h-full object-cover"
                                     data-alt="A high-quality, professional headshot photo of a man used for facial recognition verification. The lighting is bright and even, highlighting facial features clearly against a neutral gray studio background. The aesthetic is clean and corporate, emphasizing security and biometric precision. The man has a neutral expression, suitable for a formal identity verification process in a modern digital banking environment."
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDNdks4DHxCX_3KofE-ZNZP6LF3xulKKVJf6VEHOs3qvl9kKduOqUZE78jmGcqk1ZpGwwKnfqmpjEsS6rb0nBy1snKk-5d2Nr2FC5VUoMgv_dTMMigqTGpnKc5F-tlpUiv9BSKnYWtQgKAkdSML4nFdGzIYWRqrbzCWFDgBoeKharzBmPjXzBEQPPcjubmw1cdaN1Xf0iCOcnb7XTw1JtEjQ41rnnoTNYFe9A-_kjqaoNXSxWnUncoN5eDPluBNeD0JlYOxuHAMg">
+                                    src="{% if document.selfie_image %}{{ document.selfie_image.url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuDDNdks4DHxCX_3KofE-ZNZP6LF3xulKKVJf6VEHOs3qvl9kKduOqUZE78jmGcqk1ZpGwwKnfqmpjEsS6rb0nBy1snKk-5d2Nr2FC5VUoMgv_dTMMigqTGpnKc5F-tlpUiv9BSKnYWtQgKAkdSML4nFdGzIYWRqrbzCWFDgBoeKharzBmPjXzBEQPPcjubmw1cdaN1Xf0iCOcnb7XTw1JtEjQ41rnnoTNYFe9A-_kjqaoNXSxWnUncoN5eDPluBNeD0JlYOxuHAMg{% endif %}">
                             </div>
                             <div
                                 class="absolute -bottom-2 -right-2 bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-white">
@@ -257,7 +256,7 @@
                             VERIFIED
                         </div>
                         <p class="mt-4 text-on-surface-variant font-body-sm">Biometric scan completed successfully on
-                            2023-10-27.</p>
+                            {{ document.uploaded_at|date:"Y-m-d" }}.</p>
                     </div>
                     <!-- Document Details Card -->
                     <div
@@ -265,18 +264,18 @@
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2"><span
                                     class="material-symbols-outlined">badge</span>Document Verification</h3><button
-                                class="text-primary font-label-md hover:underline">Edit</button>
+                                class="text-primary font-label-md hover:underline" type="button" onclick="window.location.href='{% url 'kyc_documents' %}';">Edit</button>
                         </div>
                         <div class="space-y-8">
                             <div
                                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 border-b border-outline-variant pb-8">
                                 <div>
                                     <p class="text-on-surface-variant font-label-md uppercase mb-1">Document Type</p>
-                                    <p class="font-body-md font-semibold">National Identity Card</p>
+                                    <p class="font-body-md font-semibold">{{ document.get_document_type_display }}</p>
                                 </div>
                                 <div>
                                     <p class="text-on-surface-variant font-label-md uppercase mb-1">Document Number</p>
-                                    <p class="font-body-md font-semibold">UK-88294710-X</p>
+                                    <p class="font-body-md font-semibold">{{ document.id_number }}</p>
                                 </div>
                                 <div>
                                     <p class="text-on-surface-variant font-label-md uppercase mb-1">Expiry Date</p>
@@ -302,7 +301,7 @@
                                     <div
                                         class="aspect-video w-full bg-surface-container border border-outline-variant rounded-lg overflow-hidden group relative">
                                         <img alt="ID Front Preview" class="w-full h-full object-cover"
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWMHpUGa6J22Gbeg92L_p_7icQ-8XBl139sae0m2mK1rf4iuPoos0yMCLRA1Q6RV6YOTbECfunMitHh2AjuhfgaXDikLX38HpMrvjEdWfBXJcjxmzIjd_-eFgxWhei44uX5YHwdNu5zvYQu3f4Trj7HIaE7jbLrdAZ0xQ76uAgrF7PVCqRxZkdyC3RfkH5DaOH1NjiV7r_Ta7SVK_JzovefK4k6mdOlEr9Jj6C6_-a3TEcYEs6xjijJ8AL108RUqKKB3H2PDjPvQ">
+                                            src="{% if document.front_image %}{{ document.front_image.url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuCWMHpUGa6J22Gbeg92L_p_7icQ-8XBl139sae0m2mK1rf4iuPoos0yMCLRA1Q6RV6YOTbECfunMitHh2AjuhfgaXDikLX38HpMrvjEdWfBXJcjxmzIjd_-eFgxWhei44uX5YHwdNu5zvYQu3f4Trj7HIaE7jbLrdAZ0xQ76uAgrF7PVCqRxZkdyC3RfkH5DaOH1NjiV7r_Ta7SVK_JzovefK4k6mdOlEr9Jj6C6_-a3TEcYEs6xjijJ8AL108RUqKKB3H2PDjPvQ{% endif %}">
                                         <div
                                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <span class="material-symbols-outlined text-white">visibility</span></div>
@@ -313,7 +312,7 @@
                                     <div
                                         class="aspect-video w-full bg-surface-container border border-outline-variant rounded-lg overflow-hidden group relative">
                                         <img alt="Address Proof Preview" class="w-full h-full object-cover"
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQBIocGw_x5qCHY2N3V5dhYlgNLlgH-3fjoXeR0-WHbqCRD4ANaAvxeJhB_HcAZsFL6Hu-XN9x-1Kwtj4tcDmNfnA0n2R0sDp6Sn3q8Ak6LfuYuzmLDSXaip5b1apaSu7LSf-BFSVHl9sl-LRXVv_F-lbihECzbHJT81mFue9C_1nfZuKkQtRnxOMiL5F_Y4bSKmtC_NaXdQ48Fn3TbBXdAz2EwgM451yVBf-HgMiKvP9BnXzKTWkdSeeqwWJ7l1tGGj_wqAQZ2A">
+                                            src="{% if document.back_image %}{{ document.back_image.url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuDQBIocGw_x5qCHY2N3V5dhYlgNLlgH-3fjoXeR0-WHbqCRD4ANaAvxeJhB_HcAZsFL6Hu-XN9x-1Kwtj4tcDmNfnA0n2R0sDp6Sn3q8Ak6LfuYuzmLDSXaip5b1apaSu7LSf-BFSVHl9sl-LRXVv_F-lbihECzbHJT81mFue9C_1nfZuKkQtRnxOMiL5F_Y4bSKmtC_NaXdQ48Fn3TbBXdAz2EwgM451yVBf-HgMiKvP9BnXzKTWkdSeeqwWJ7l1tGGj_wqAQZ2A{% endif %}">
                                         <div
                                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <span class="material-symbols-outlined text-white">visibility</span></div>
@@ -324,6 +323,11 @@
                     </div>
                 </div>
                 <!-- Declarations -->
+                <form method="POST" action="{% url 'kyc_finalize' %}" id="kyc-finalize-form">
+                {% csrf_token %}
+                {% if finalize_form.non_field_errors %}
+                <p class="text-error text-body-sm mb-4">{{ finalize_form.non_field_errors.0 }}</p>
+                {% endif %}
                 <section class="bg-surface-container-low p-6 rounded-xl border border-primary/20">
                     <h3 class="font-headline-sm text-headline-sm text-primary mb-4">Declarations</h3>
                     <div class="space-y-4">
@@ -331,7 +335,7 @@
                             <div class="mt-1">
                                 <input
                                     class="w-5 h-5 rounded border-outline text-primary focus:ring-primary transition-all cursor-pointer"
-                                    id="confirm-data" type="checkbox">
+                                    id="confirm-data" name="confirm_data" type="checkbox" value="on">
                             </div>
                             <span class="text-on-surface font-body-md leading-relaxed">
                                 I confirm the information provided is accurate, complete, and up-to-date. I understand
@@ -339,11 +343,14 @@
                                 consequences.
                             </span>
                         </label>
+                        {% if finalize_form.confirm_data.errors %}
+                        <p class="text-error text-body-sm">{{ finalize_form.confirm_data.errors.0 }}</p>
+                        {% endif %}
                         <label class="flex items-start gap-4 cursor-pointer group">
                             <div class="mt-1">
                                 <input
                                     class="w-5 h-5 rounded border-outline text-primary focus:ring-primary transition-all cursor-pointer"
-                                    type="checkbox">
+                                    id="agree-terms" name="agree_terms" type="checkbox" value="on">
                             </div>
                             <span class="text-on-surface font-body-md leading-relaxed">
                                 I agree to the <a class="text-primary underline" href="#">Terms of Service</a> and <a
@@ -351,6 +358,9 @@
                                 my biometric data.
                             </span>
                         </label>
+                        {% if finalize_form.agree_terms.errors %}
+                        <p class="text-error text-body-sm">{{ finalize_form.agree_terms.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </section>
                 <!-- Action Bar -->
@@ -362,10 +372,13 @@
                     </button>
                     <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                         <button
+                            type="button"
+                            onclick="window.location.href='{% url 'kyc_liveness' %}';"
                             class="px-8 py-3 rounded-xl bg-surface-variant text-on-surface-variant font-semibold hover:bg-surface-container-highest transition-all">
                             Back to Step 3
                         </button>
                         <button
+                            type="submit"
                             class="px-10 py-3 rounded-xl bg-primary text-white font-bold opacity-50 cursor-not-allowed hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                             disabled="" id="submit-btn">
                             Finalize and Submit Application
@@ -373,6 +386,7 @@
                         </button>
                     </div>
                 </div>
+                </form>
             </div>
         </main>
     </div>
@@ -388,38 +402,39 @@
         </div>
     </footer>
     <script>
-        // Simple logic for the submit button state based on the first mandatory checkbox
         const confirmCheckbox = document.getElementById('confirm-data');
+        const agreeTermsCheckbox = document.getElementById('agree-terms');
         const submitBtn = document.getElementById('submit-btn');
+        const finalizeForm = document.getElementById('kyc-finalize-form');
 
-        confirmCheckbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                submitBtn.disabled = false;
+        const updateSubmitState = () => {
+            const ready = confirmCheckbox.checked && agreeTermsCheckbox.checked;
+            submitBtn.disabled = !ready;
+            if (ready) {
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 submitBtn.classList.add('hover:opacity-90');
             } else {
-                submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 submitBtn.classList.remove('hover:opacity-90');
             }
-        });
+        };
 
-        // Add a small interaction for the submit button
-        submitBtn.addEventListener('click', () => {
-            if (!submitBtn.disabled) {
-                submitBtn.innerHTML = `
+        confirmCheckbox.addEventListener('change', updateSubmitState);
+        agreeTermsCheckbox.addEventListener('change', updateSubmitState);
+
+        if (finalizeForm && submitBtn) {
+            finalizeForm.addEventListener('submit', () => {
+                if (!submitBtn.disabled) {
+                    submitBtn.innerHTML = `
                     <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Processing...
                 `;
-                setTimeout(() => {
-                    alert('Application submitted successfully! You will be redirected to the dashboard.');
-                    window.location.reload();
-                }, 1500);
-            }
-        });
+                }
+            });
+        }
     </script>
 
 

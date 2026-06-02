@@ -24,7 +24,10 @@
                         data-alt="A professional headshot of a middle-aged man with short hair and a confident expression, wearing a tailored navy blue suit and a crisp white shirt. The background is a blurred corporate office setting with soft, natural morning light filtering through. The overall aesthetic is clean, high-resolution, and perfectly aligned with a professional bank-grade interface using a cool color palette."
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJRzsuFMJ8WMopb6HPmSdBYrLZU_C7Gg1ljpMqaUHSbWipo04hOsSwZT-Jc0JT358fHH5uC-muAtTtLYhNUOoQ4BDHMoaIGlQqoEk6FomDfGlc_yoBVzJ74RQKcyi1F57OJG3hm_ZG-y4A3jBEe_ko_p3sLp-yYs2TlcTLDuoRbDaiUWwM5BwtHPalxgivT97MyBqIHNlpcZOwWwHOLbd2ToIHFdPSth3sdHv0vQ98ZnRRD0EBp96cy3T3JpDdvsivyC2T7o8S8H8">
                 </div>
-                <button class="ml-2 font-label-md text-label-md text-primary hover:underline">Logout</button>
+                <form method="POST" action="{% url 'logout' %}" class="inline"> 
+                    {% csrf_token %}
+                    <button type="submit" class="ml-2 font-label-md text-label-md text-primary hover:underline">Logout</button>
+                </form>
             </div>
         </div>
     </header>

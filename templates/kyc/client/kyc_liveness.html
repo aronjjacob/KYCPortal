@@ -179,7 +179,7 @@
                 <img
                   alt="Live camera feed placeholder"
                   class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[0.3]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDclefIRmpwRE5hZKy3vqRowFXnLwgYgpDcr4ThXu1r9nZIgCg50UwsBKziUyHgMPgl-3Do7lBO3wqfikXYibEaQ-kDAc8VXWz0XQBPlXtaqYY2NbT737LfN-t0y5jbW_M1EcycBXaah3HKCztjoGIBy2DKdmf4czUK-SKx2oHgbHkWVGX_IJ5iWzXB_19s5mwSPIcT_1xmK6bw_fxHckNu6rsvA96jUF2dvWOE00rHEFUVnWAlM2XMsPHiobr1_okzcEGoDxUIwA"
+                  src="{% if document.selfie_image %}{{ document.selfie_image.url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuDclefIRmpwRE5hZKy3vqRowFXnLwgYgpDcr4ThXu1r9nZIgCg50UwsBKziUyHgMPgl-3Do7lBO3wqfikXYibEaQ-kDAc8VXWz0XQBPlXtaqYY2NbT737LfN-t0y5jbW_M1EcycBXaah3HKCztjoGIBy2DKdmf4czUK-SKx2oHgbHkWVGX_IJ5iWzXB_19s5mwSPIcT_1xmK6bw_fxHckNu6rsvA96jUF2dvWOE00rHEFUVnWAlM2XMsPHiobr1_okzcEGoDxUIwA{% endif %}"
                 />
                 <div class="absolute inset-0 pointer-events-none">
                   <div class="absolute inset-0 camera-mask"></div>
@@ -197,20 +197,22 @@
                 </div>
               </div>
 
+              <form method="POST" action="{% url 'kyc_liveness' %}" enctype="multipart/form-data" id="kyc-liveness-form">
+              {% csrf_token %}
+              <div class="px-8 pb-4">
+                <label class="block font-body-sm font-bold text-on-surface mb-2" for="id_selfie_image">Liveness photo</label>
+                {{ liveness_form.selfie_image }}
+                {% if liveness_form.selfie_image.errors %}
+                  <p class="text-error text-body-sm mt-2">{{ liveness_form.selfie_image.errors.0 }}</p>
+                {% endif %}
+              </div>
               <div class="p-8 flex flex-col gap-4 md:flex-row items-center justify-center bg-surface-container-lowest">
                 <button
                   class="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-3 rounded-xl font-body-lg hover:bg-primary-container transition-all shadow-md active:scale-95"
-                  type="button"
+                  type="submit"
                 >
                   <span class="material-symbols-outlined">photo_camera</span>
-                  Take Photo
-                </button>
-                <button
-                  class="w-full md:w-auto flex items-center justify-center gap-2 border border-primary text-primary px-8 py-3 rounded-xl font-body-lg hover:bg-surface-container-low transition-all active:scale-95"
-                  type="button"
-                >
-                  <span class="material-symbols-outlined">upload</span>
-                  Upload Manually
+                  Upload Photo
                 </button>
                 <a href="{% url 'kyc_finalize' %}"
                   class="w-full md:w-auto flex items-center justify-center gap-2 bg-primary-container text-on-primary px-8 py-3 rounded-xl font-body-lg hover:bg-primary transition-all shadow-sm active:scale-95"
@@ -220,6 +222,7 @@
                   Finalize
             </a>
               </div>
+              </form>
             </section>
           </div>
 
