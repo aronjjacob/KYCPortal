@@ -76,3 +76,35 @@ class KYCApplication(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.get_status_display()}"
+
+
+class AdminDashboardFeature(models.Model):
+    """Manage dynamic features/quick actions on the admin dashboard."""
+    ICON_CHOICES = [
+        ('verified_user', 'Verified User'),
+        ('analytics', 'Analytics'),
+        ('settings', 'Settings'),
+        ('people', 'People'),
+        ('description', 'Description'),
+        ('security', 'Security'),
+        ('assessment', 'Assessment'),
+        ('dashboard', 'Dashboard'),
+        ('document_scanner', 'Document Scanner'),
+        ('history', 'History'),
+        ('tune', 'Tune'),
+    ]
+
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    url_name = models.CharField(max_length=100, help_text="Django URL name (e.g., 'user_management')")
+    icon = models.CharField(max_length=30, choices=ICON_CHOICES, default='description')
+    is_active = models.BooleanField(default=True)
+    order = models.IntegerField(default=0, help_text="Display order on dashboard")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return self.title

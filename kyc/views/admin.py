@@ -6,10 +6,13 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.views import View
 from django.views.generic import TemplateView
+from django.utils import timezone
+from django.core.paginator import Paginator
+from datetime import timedelta
 
 from ..decorators import group_required
 from ..forms import UserCreateForm, UserUpdateForm
-from ..models import KYCProfile, KYCDocument
+from ..models import KYCProfile, KYCDocument, KYCApplication, AdminDashboardFeature
 
 
 @method_decorator([login_required, group_required('verifier')], name='dispatch')
@@ -21,12 +24,27 @@ class AdminDashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         profiles = KYCProfile.objects.all().order_by('-created_at')
         
+        # Get actual statistics
         context['profiles'] = profiles
         context['total_profiles'] = profiles.count()
         context['pending_count'] = profiles.filter(status='Pending').count()
         context['approved_count'] = profiles.filter(status='Approved').count()
         context['rejected_count'] = profiles.filter(status='Rejected').count()
         context['under_review_count'] = profiles.filter(status='Under Review').count()
+        
+        # Get today's approved count
+        today = timezone.now().date()
+        context['approved_today'] = profiles.filter(
+            status='Approved',
+            created_at__date=today
+        ).count()
+        
+        # Get total users
+        User = get_user_model()
+        context['total_users'] = User.objects.count()
+        
+        # Get active features for quick actions
+        context['features'] = AdminDashboardFeature.objects.filter(is_active=True)
         
         return context
 
@@ -37,7 +55,15 @@ class UserManagementView(View):
 
     def get(self, request, *args, **kwargs):
         User = get_user_model()
-        users = User.objects.all().prefetch_related('groups').order_by('username')
+        users_list = User.objects.all().prefetch_related('groups').order_by('username')
+        
+        # Paginate users (10 per page)
+        paginator = Paginator(users_list, 10)
+        page_number = request.GET.get('page', 1)
+        try:
+            users = paginator.page(page_number)
+        except:
+            users = paginator.page(1)
         
         edit_user = None
         edit_form = None
@@ -48,13 +74,15 @@ class UserManagementView(View):
             edit_user = get_object_or_404(User, pk=edit_id)
             edit_form = UserUpdateForm(instance=edit_user)
         
-        total_users = users.count()
-        active_users = users.filter(is_active=True).count()
-        staff_users = users.filter(is_staff=True).count()
-        super_users = users.filter(is_superuser=True).count()
+        total_users = users_list.count()
+        active_users = users_list.filter(is_active=True).count()
+        staff_users = users_list.filter(is_staff=True).count()
+        super_users = users_list.filter(is_superuser=True).count()
         
         return render(request, 'kyc/admin/user_management.html', {
             'users': users,
+            'paginator': paginator,
+            'page_obj': users,
             'total_users': total_users,
             'active_users': active_users,
             'staff_users': staff_users,
@@ -123,19 +151,25 @@ class DocumentReviewView(View):
         action = request.POST.get('action')
         remarks = request.POST.get('remarks', '')
 
-        if action == 'approve':
-            profile.status = 'Approved'
-        elif action == 'reject':
-            profile.status = 'Rejected'
-        elif action == 'under_review':
-            profile.status = 'Under Review'
-        elif action == 'resubmission':
-            profile.status = 'Resubmission Required'
-        else:
+        # Map actions to both Profile and Application statuses
+        status_map = {
+            'approve': ('Approved', 'approved'),
+            'reject': ('Rejected', 'rejected'),
+            'under_review': ('Under Review', 'under_review'),
+            'resubmission': ('Resubmission Required', 'pending'),
+        }
+
+        if action not in status_map:
             messages.error(request, 'Invalid action.')
             return redirect('document_review', pk=profile.pk)
 
+        profile_status, app_status = status_map[action]
+        profile.status = profile_status
         profile.save()
+
+        if hasattr(profile, 'application'):
+            profile.application.status = app_status
+            profile.application.save()
 
         for document in documents:
             document.remarks = remarks
@@ -181,8 +215,16 @@ class BulkUpdateStatusView(View):
             'Resubmission Required'
         ]
 
+        app_status_map = {
+            'Approved': 'approved',
+            'Rejected': 'rejected',
+            'Under Review': 'under_review',
+            'Resubmission Required': 'pending'
+        }
+
         if selected_profiles and new_status in allowed_statuses:
             KYCProfile.objects.filter(id__in=selected_profiles).update(status=new_status)
+            KYCApplication.objects.filter(profile_id__in=selected_profiles).update(status=app_status_map[new_status])
             messages.success(request, 'Selected KYC records have been updated.')
         else:
             messages.error(request, 'Please select records and a valid status.')
