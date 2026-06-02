@@ -190,7 +190,7 @@
                         </div>
                         <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
                             Total Assigned</h3>
-                        <p class="font-headline-lg text-headline-lg text-on-surface">154</p>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">{{ total_assigned }}</p>
                         <div class="mt-4 flex items-center gap-2">
                             <span class="text-green-600 flex items-center text-xs font-semibold">
                                 <span class="material-symbols-outlined text-[14px]">trending_up</span> 12%
@@ -211,7 +211,7 @@
                         </div>
                         <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
                             Pending Review</h3>
-                        <p class="font-headline-lg text-headline-lg text-on-surface">42</p>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">{{ pending_review_count }}</p>
                         <div class="mt-4 flex items-center gap-2">
                             <span class="text-on-surface-variant text-xs">8 applications overdue SLA</span>
                         </div>
@@ -223,15 +223,15 @@
                             <div class="p-2 bg-secondary-container rounded-lg text-primary">
                                 <span class="material-symbols-outlined">check_circle</span>
                             </div>
-                            <span class="text-primary text-[10px] font-bold">GOAL: 25</span>
+                            <span class="text-primary text-[10px] font-bold">GOAL: {{ completed_today_goal }}</span>
                         </div>
                         <h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-1">
                             Completed Today</h3>
-                        <p class="font-headline-lg text-headline-lg text-on-surface">18</p>
+                        <p class="font-headline-lg text-headline-lg text-on-surface">{{ completed_today_count }}</p>
                         <div class="mt-4 w-full bg-surface-container-low rounded-full h-1.5 overflow-hidden">
-                            <div class="bg-primary h-full" style="width: 72%"></div>
+                            <div class="bg-primary h-full" style="width: {{ completed_today_pct }}%"></div>
                         </div>
-                        <p class="mt-2 text-on-surface-variant text-[11px] font-medium">72% of daily target reached</p>
+                        <p class="mt-2 text-on-surface-variant text-[11px] font-medium">{{ completed_today_pct }}% of daily target reached</p>
                     </div>
                 </div>
                 <!-- Recent Applications Data Table -->
@@ -239,8 +239,7 @@
                     <div class="p-6 border-b border-outline-variant flex justify-between items-center">
                         <h2 class="font-headline-sm text-headline-sm text-on-surface">Recent KYC Applications</h2>
                         <div class="flex items-center gap-2">
-                            <span class="font-label-md text-label-md text-on-surface-variant">Displaying 1-10 of
-                                42</span>
+                            <span class="font-label-md text-label-md text-on-surface-variant">Displaying {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -256,137 +255,75 @@
                                     <th
                                         class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
                                         Submission Date</th>
-                                    <th
-                                        class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">
-                                        Risk Level</th>
+                                    <!-- Risk Level column removed -->
                                     <th
                                         class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider border-b border-outline-variant text-right">
                                         Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-outline-variant">
-                                <!-- Row 1 -->
+                                {% for app in applications %}
                                 <tr class="hover:bg-surface-container-lowest transition-colors group">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="font-code text-code text-primary font-bold">APP-001234</span>
+                                        <span class="font-code text-code text-primary font-bold">APP-{{ app.id|stringformat:"06d" }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-3">
                                             <div
                                                 class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold text-xs">
-                                                JD</div>
-                                            <span class="font-body-md text-body-md text-on-surface">Jonathan
-                                                Davies</span>
+                                                {{ app.user.username|slice:":2"|upper }}</div>
+                                            <span class="font-body-md text-body-md text-on-surface">{{ app.profile.full_name }}</span>
                                         </div>
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
-                                        Oct 24, 2023 09:12 AM</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-800">LOW</span>
-                                    </td>
+                                        {{ app.created_at|date:"M d, Y h:i A" }}</td>
+                                    <!-- Risk Level cell removed -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <button
-                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
+                                        <a href="{% url 'verifier_document_review' app.pk %}"
+                                            class="inline-flex items-center justify-center bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">
+                                            Review
+                                        </a>
                                     </td>
                                 </tr>
-                                <!-- Row 2 -->
-                                <tr class="hover:bg-surface-container-lowest transition-colors group">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="font-code text-code text-primary font-bold">APP-001235</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="h-8 w-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-xs">
-                                                SK</div>
-                                            <span class="font-body-md text-body-md text-on-surface">Sarah Kincaid</span>
-                                        </div>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
-                                        Oct 24, 2023 10:45 AM</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-800">MEDIUM</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <button
-                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
-                                    </td>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="px-6 py-8 text-center text-on-surface-variant">No applications available.</td>
                                 </tr>
-                                <!-- Row 3 -->
-                                <tr class="hover:bg-surface-container-lowest transition-colors group">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="font-code text-code text-primary font-bold">APP-001236</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="h-8 w-8 rounded-full bg-error-container flex items-center justify-center text-error font-bold text-xs">
-                                                MR</div>
-                                            <span class="font-body-md text-body-md text-on-surface">Marcus Rossi</span>
-                                        </div>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
-                                        Oct 24, 2023 11:30 AM</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 text-red-800">HIGH</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <button
-                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
-                                    </td>
-                                </tr>
-                                <!-- Row 4 -->
-                                <tr class="hover:bg-surface-container-lowest transition-colors group">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="font-code text-code text-primary font-bold">APP-001237</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold text-xs">
-                                                LL</div>
-                                            <span class="font-body-md text-body-md text-on-surface">Linda Lawson</span>
-                                        </div>
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap font-body-sm text-body-sm text-on-surface-variant">
-                                        Oct 24, 2023 01:15 PM</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-800">LOW</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <button
-                                            class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container transition-all">Review</button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     <div
                         class="p-4 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
                         <div class="flex items-center gap-4">
-                            <span class="font-label-md text-label-md text-on-surface-variant">Rows per page: 10</span>
+                            <span class="font-label-md text-label-md text-on-surface-variant">Rows per page: {{ page_obj.paginator.per_page }}</span>
                             <div class="flex items-center gap-1">
-                                <button class="p-1 rounded hover:bg-surface-container-low"><span
-                                        class="material-symbols-outlined text-[18px]">chevron_left</span></button>
-                                <span
-                                    class="font-label-md text-label-md bg-primary text-on-primary px-2.5 py-0.5 rounded">1</span>
-                                <span
-                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">2</span>
-                                <span
-                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">3</span>
-                                <span class="px-1 text-on-surface-variant">...</span>
-                                <span
-                                    class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low cursor-pointer">5</span>
-                                <button class="p-1 rounded hover:bg-surface-container-low"><span
-                                        class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+                                {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}" class="p-1 rounded hover:bg-surface-container-low"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_left</span></a>
+                                {% else %}
+                                <span class="p-1 rounded text-on-surface-variant opacity-40"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_left</span></span>
+                                {% endif %}
+
+                                {% for num in page_numbers %}
+                                    {% if num == '...' %}
+                                        <span class="px-2 text-on-surface-variant">...</span>
+                                    {% elif num == page_obj.number %}
+                                        <span class="font-label-md text-label-md bg-primary text-on-primary px-2.5 py-0.5 rounded">{{ num }}</span>
+                                    {% else %}
+                                        <a href="?page={{ num }}" class="font-label-md text-label-md px-2.5 py-0.5 rounded hover:bg-surface-container-low">{{ num }}</a>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}" class="p-1 rounded hover:bg-surface-container-low"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_right</span></a>
+                                {% else %}
+                                <span class="p-1 rounded text-on-surface-variant opacity-40"><span
+                                        class="material-symbols-outlined text-[18px]">chevron_right</span></span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

@@ -171,7 +171,7 @@
                     <div>
                         <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total
                             Processed</p>
-                        <h3 class="font-headline-md text-headline-md text-on-surface">12,842</h3>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">{{ total_processed }}</h3>
                         <p class="text-xs text-on-surface-variant mt-1 font-medium"><span
                                 class="text-green-600">+12%</span> vs last month</p>
                     </div>
@@ -185,9 +185,9 @@
                     <div>
                         <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Approval
                             Rate</p>
-                        <h3 class="font-headline-md text-headline-md text-on-surface">92%</h3>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">{{ approval_rate }}%</h3>
                         <div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2">
-                            <div class="bg-primary h-1.5 rounded-full w-[92%]"></div>
+                            <div class="bg-primary h-1.5 rounded-full" style="width: {{ approval_rate|default:0 }}%"></div>
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
                     <div>
                         <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Avg.
                             Review Time</p>
-                        <h3 class="font-headline-md text-headline-md text-on-surface">14m</h3>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">{{ avg_review_minutes|default:0|floatformat:0 }}m</h3>
                         <p class="text-xs text-on-surface-variant mt-1 font-medium"><span
                                 class="text-red-600">-2m</span> target deviation</p>
                     </div>
@@ -277,182 +277,74 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-outline-variant">
-                            <!-- Row 1 -->
+                            {% for app in applications %}
                             <tr class="hover:bg-surface-container-low/50 transition-colors">
                                 <td class="px-6 py-4">
-                                    <span class="font-code text-code text-primary font-bold">#KYC-94281</span>
+                                    <span class="font-code text-code text-primary font-bold">#KYC-{{ app.id|stringformat:"06d" }}</span>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div
                                             class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-primary">
-                                            AA</div>
-                                        <span class="font-body-md text-body-md text-on-surface">Alex Anderson</span>
+                                            {{ app.profile.full_name|slice:":2"|upper }}</div>
+                                        <span class="font-body-md text-body-md text-on-surface">{{ app.profile.full_name }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <p class="font-body-sm text-body-sm text-on-surface">Oct 24, 2023</p>
-                                    <p class="text-[10px] text-on-surface-variant">14:22 GMT</p>
+                                    <p class="font-body-sm text-body-sm text-on-surface">{{ app.updated_at|date:"M d, Y" }}</p>
+                                    <p class="text-[10px] text-on-surface-variant">{{ app.updated_at|date:"H:i" }} GMT</p>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                        Approved
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if app.status == 'approved' %}bg-green-100 text-green-800{% elif app.status == 'rejected' %}bg-red-100 text-red-800{% else %}bg-amber-100 text-amber-800{% endif %}">
+                                        <span class="w-1.5 h-1.5 rounded-full {% if app.status == 'approved' %}bg-green-500{% elif app.status == 'rejected' %}bg-red-500{% else %}bg-amber-500{% endif %} mr-1.5"></span>
+                                        {{ app.get_status_display }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">Mitchell R.</td>
+                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">N/A</td>
                                 <td class="px-6 py-4 text-right">
-                                    <button class="text-primary hover:underline font-label-md text-label-md">View
-                                        Details</button>
+                                    <a href="{% url 'verifier_document_review' app.pk %}" class="text-primary hover:underline font-label-md text-label-md">View
+                                        Details</a>
                                 </td>
                             </tr>
-                            <!-- Row 2 -->
-                            <tr class="hover:bg-surface-container-low/50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="font-code text-code text-primary font-bold">#KYC-94280</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-primary">
-                                            BM</div>
-                                        <span class="font-body-md text-body-md text-on-surface">Bradley Miller</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="font-body-sm text-body-sm text-on-surface">Oct 24, 2023</p>
-                                    <p class="text-[10px] text-on-surface-variant">11:05 GMT</p>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span>
-                                        Rejected
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">Sarah L.</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-primary hover:underline font-label-md text-label-md">View
-                                        Details</button>
-                                </td>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">No verification history entries available.</td>
                             </tr>
-                            <!-- Row 3 -->
-                            <tr class="hover:bg-surface-container-low/50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="font-code text-code text-primary font-bold">#KYC-94279</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-primary">
-                                            CK</div>
-                                        <span class="font-body-md text-body-md text-on-surface">Cassandra King</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="font-body-sm text-body-sm text-on-surface">Oct 23, 2023</p>
-                                    <p class="text-[10px] text-on-surface-variant">16:40 GMT</p>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                        Approved
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">Mitchell R.</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-primary hover:underline font-label-md text-label-md">View
-                                        Details</button>
-                                </td>
-                            </tr>
-                            <!-- Row 4 -->
-                            <tr class="hover:bg-surface-container-low/50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="font-code text-code text-primary font-bold">#KYC-94278</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-primary">
-                                            DW</div>
-                                        <span class="font-body-md text-body-md text-on-surface">David Wright</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="font-body-sm text-body-sm text-on-surface">Oct 23, 2023</p>
-                                    <p class="text-[10px] text-on-surface-variant">12:15 GMT</p>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-                                        Escalated
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">System AI</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-primary hover:underline font-label-md text-label-md">View
-                                        Details</button>
-                                </td>
-                            </tr>
-                            <!-- Row 5 -->
-                            <tr class="hover:bg-surface-container-low/50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="font-code text-code text-primary font-bold">#KYC-94277</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-primary">
-                                            EM</div>
-                                        <span class="font-body-md text-body-md text-on-surface">Elena Martinez</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="font-body-sm text-body-sm text-on-surface">Oct 23, 2023</p>
-                                    <p class="text-[10px] text-on-surface-variant">09:30 GMT</p>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                        Approved
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 font-body-sm text-body-sm text-on-surface-variant">Sarah L.</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-primary hover:underline font-label-md text-label-md">View
-                                        Details</button>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <!-- Pagination Area -->
                 <div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 5 of 12,842 entries</p>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} entries</p>
                     <div class="flex gap-2">
-                        <button
-                            class="p-1.5 border border-outline-variant rounded hover:bg-surface-container-lowest disabled:opacity-50 transition-colors"
-                            disabled="">
-                            <span class="material-symbols-outlined block text-[20px]"
-                                data-icon="chevron_left">chevron_left</span>
+                        {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="p-1.5 border border-outline-variant rounded hover:bg-surface-container-lowest transition-colors">
+                            <span class="material-symbols-outlined block text-[20px]" data-icon="chevron_left">chevron_left</span>
+                        </a>
+                        {% else %}
+                        <button class="p-1.5 border border-outline-variant rounded text-on-surface-variant disabled:opacity-50" disabled>
+                            <span class="material-symbols-outlined block text-[20px]" data-icon="chevron_left">chevron_left</span>
                         </button>
-                        <button class="px-3 py-1.5 bg-primary text-on-primary rounded text-xs font-bold">1</button>
-                        <button
-                            class="px-3 py-1.5 border border-outline-variant rounded text-xs font-bold hover:bg-surface-container-lowest">2</button>
-                        <button
-                            class="px-3 py-1.5 border border-outline-variant rounded text-xs font-bold hover:bg-surface-container-lowest">3</button>
-                        <span class="px-2 self-center text-on-surface-variant">...</span>
-                        <button
-                            class="px-3 py-1.5 border border-outline-variant rounded text-xs font-bold hover:bg-surface-container-lowest">2568</button>
-                        <button
-                            class="p-1.5 border border-outline-variant rounded hover:bg-surface-container-lowest transition-colors">
-                            <span class="material-symbols-outlined block text-[20px]"
-                                data-icon="chevron_right">chevron_right</span>
+                        {% endif %}
+                        {% for num in page_numbers %}
+                            {% if num == '...' %}
+                                <span class="px-2 self-center text-on-surface-variant">...</span>
+                            {% elif num == page_obj.number %}
+                                <span class="px-3 py-1.5 bg-primary text-on-primary rounded text-xs font-bold">{{ num }}</span>
+                            {% else %}
+                                <a href="?page={{ num }}" class="px-3 py-1.5 border border-outline-variant rounded text-xs font-bold hover:bg-surface-container-lowest">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="p-1.5 border border-outline-variant rounded hover:bg-surface-container-lowest transition-colors">
+                            <span class="material-symbols-outlined block text-[20px]" data-icon="chevron_right">chevron_right</span>
+                        </a>
+                        {% else %}
+                        <button class="p-1.5 border border-outline-variant rounded text-on-surface-variant disabled:opacity-50" disabled>
+                            <span class="material-symbols-outlined block text-[20px]" data-icon="chevron_right">chevron_right</span>
                         </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

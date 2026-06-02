@@ -148,45 +148,43 @@
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="font-headline-sm text-headline-sm text-on-surface">Client Info</h2>
                         <span
-                            class="bg-surface-container-highest text-primary px-2 py-1 rounded text-[10px] font-bold uppercase">Pending</span>
+                            class="bg-surface-container-highest text-primary px-2 py-1 rounded text-[10px] font-bold uppercase">{{ application.get_status_display }}</span>
                     </div>
                     <div class="flex flex-col items-center mb-6">
-                        <img alt="Jonathan Sterling"
-                            class="w-24 h-24 rounded-xl border-2 border-primary-container object-cover mb-3"
-                            data-alt="A formal identification style portrait of a middle-aged man with short dark hair and a neutral expression, suitable for a KYC application. He is positioned against a plain, neutral light gray background with sharp, even studio lighting that highlights clear facial features for biometric matching. The visual style is crisp and professional."
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEihjrBR8pR9c9542--bbaCSO8E00D1uNKR11VwaJvr0oHDi1cNOZedecwJo8aGVu9GRp1RgD5--h4c3zW0C23rgCSAS-pY-5XSiWQLuawdKxaC9RdTeW3Da6TD-mA1-TqgoubGgoaSAS-ECb4qeWnbCBDJr7RYzqPIEpkC1h6YRtTZN2IoOKJTkC4WxHrccM8yseYiv6KzLLNJ102ET09rjl2EtyA48ucdpAIr1_0BpSfw00Y-5FWvtiQ9GSSMl4ti3ccRGy8hQ" />
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface">Jonathan Sterling</h3>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant">Tier 2 Individual Account</p>
+                        <div class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xl font-bold">
+                            {{ profile.full_name|slice:":2"|upper }}</div>
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface">{{ profile.full_name }}</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">{{ profile.user.username }}'s KYC Submission</p>
                     </div>
                     <div class="space-y-4">
                         <div>
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Date of
                                 Birth</label>
-                            <p class="font-body-md text-body-md font-semibold">March 14, 1985</p>
+                            <p class="font-body-md text-body-md font-semibold">{{ profile.date_of_birth|date:"F j, Y" }}</p>
                         </div>
                         <div>
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Residential
                                 Address</label>
-                            <p class="font-body-md text-body-md font-semibold">221B Baker Street, London, NW1 6XE, UK
-                            </p>
+                            <p class="font-body-md text-body-md font-semibold">{{ profile.address|default:profile.street_address }}, {{ profile.city }}, {{ profile.country }}</p>
                         </div>
                         <div>
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Contact
                                 Number</label>
-                            <p class="font-body-md text-body-md font-semibold">+44 20 7946 0958</p>
+                            <p class="font-body-md text-body-md font-semibold">{{ profile.phone_number }}</p>
                         </div>
                         <div>
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Email
                                 Address</label>
-                            <p class="font-body-md text-body-md font-semibold">j.sterling@example.com</p>
+                            <p class="font-body-md text-body-md font-semibold">{{ profile.email }}</p>
                         </div>
                         <div class="pt-4 border-t border-outline-variant">
                             <label class="font-label-md text-label-md text-on-surface-variant block mb-1">Submission
                                 Date</label>
-                            <p class="font-body-md text-body-md font-semibold">Oct 24, 2023 • 14:22 GMT</p>
+                            <p class="font-body-md text-body-md font-semibold">{{ application.created_at|date:"M d, Y • h:i A" }}</p>
                         </div>
                     </div>
                 </div>
+              
                 <div
                     class="bg-surface-container-high/30 border border-outline-variant rounded-xl p-4 flex items-center gap-3">
                     <span class="material-symbols-outlined text-primary">info</span>
@@ -222,14 +220,21 @@
                             </div>
                             <div
                                 class="bg-surface-container-low p-2 border-b border-outline-variant flex justify-between items-center">
-                                <span class="font-label-md text-label-md text-on-surface-variant">National Passport -
-                                    Front</span>
+                                <span class="font-label-md text-label-md text-on-surface-variant">{{ application.document.document_type }} - Front</span>
                                 <span
                                     class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LEGIBLE</span>
                             </div>
-                            <img alt="Passport Front" class="w-full h-48 object-cover cursor-pointer"
-                                data-alt="A detailed, macro photograph of a modern British passport's main bio-data page. The image shows crisp typography, a hologram security feature refracting light, and clear administrative data. The lighting is diffused and professional to avoid glare, set within a sterile, secure verification interface context."
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4zukUuyAGHHOU9qHzCwxnPlNox0Ji_VwahKaHET98bN7q-xujoLHoK8xzaXQhy2l3wctLpIfNdF7E7Kr8TZW6GEgfAzi1aD46L87HAYwGRKeaS9CnAYzE7nUwu2Q29XvJggcoyc70wuFCPnBaha4ebfIYOQP6tWAPAqXcOXoXfoHbE4BcCBkAN0GX-1pFpcRg_h0z_x45haNljFcK51M_OqUfw4l181d7LiMG8V7Ioorz-XOWHNrxdVUUOgrvEMLc2irXFh-03A" />
+                            {% if application.document.front_image %}
+                            <img alt="{{ application.document.document_type }} Front" class="w-full h-48 object-cover cursor-pointer"
+                                src="{{ application.document.front_image.url }}"
+                                data-viewer-src="{{ application.document.front_image.url }}"
+                                data-document-title="{{ application.document.document_type }} - Front" />
+                            {% else %}
+                            <img alt="{{ application.document.document_type }} Front" class="w-full h-48 object-cover cursor-pointer"
+                                src="https://via.placeholder.com/720x320?text=Front+Image"
+                                data-viewer-src="https://via.placeholder.com/720x320?text=Front+Image"
+                                data-document-title="{{ application.document.document_type }} - Front" />
+                            {% endif %}
                         </div>
                         <!-- ID Back -->
                         <div class="group relative rounded-lg border border-outline-variant overflow-hidden">
@@ -244,14 +249,21 @@
                             </div>
                             <div
                                 class="bg-surface-container-low p-2 border-b border-outline-variant flex justify-between items-center">
-                                <span class="font-label-md text-label-md text-on-surface-variant">National Passport -
-                                    Back/Secondary</span>
+                                <span class="font-label-md text-label-md text-on-surface-variant">{{ application.document.document_type }} - Back/Secondary</span>
                                 <span
                                     class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LEGIBLE</span>
                             </div>
-                            <img alt="Passport Back" class="w-full h-48 object-cover cursor-pointer"
-                                data-alt="A high-resolution photograph of the back cover or a secondary security page of a passport. The texture of the passport material is visible, with embossed golden emblems. The lighting highlights the tactile security features and precise manufacturing, maintained in a clean, clinical regulatory design style."
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCQxfoDTYy4MdwmnxGQqR3rcDplFDm1yTotpTuy4mTPt4rjL5bSQeVlV1nWRMvzx32N4vZKokrPMS609HrwOwBuJ1RfvHWDDBoz9vhUPl5Jzi_8m7HVKu9dIcWSXIq6t83J3w7O422y5k9znhn4g2sgHJdMuMLYySviY-7IBNILQCXdoxQNV-Z3iLNw5mF70bk9jSevKpU4e5uFFhViG_um5kGHsenjbLB-MshHy_VQJ4Cg9TCPEWgapHhMjQ5Joey0yIbmyrTZw" />
+                            {% if application.document.back_image %}
+                            <img alt="{{ application.document.document_type }} Back" class="w-full h-48 object-cover cursor-pointer"
+                                src="{{ application.document.back_image.url }}"
+                                data-viewer-src="{{ application.document.back_image.url }}"
+                                data-document-title="{{ application.document.document_type }} - Back" />
+                            {% else %}
+                            <img alt="{{ application.document.document_type }} Back" class="w-full h-48 object-cover cursor-pointer"
+                                src="https://via.placeholder.com/720x320?text=Back+Image"
+                                data-viewer-src="https://via.placeholder.com/720x320?text=Back+Image"
+                                data-document-title="{{ application.document.document_type }} - Back" />
+                            {% endif %}
                         </div>
                         <!-- Selfie -->
                         <div class="group relative rounded-lg border border-outline-variant overflow-hidden">
@@ -272,9 +284,17 @@
                                     class="bg-on-tertiary-fixed text-tertiary-fixed px-2 py-0.5 rounded-full text-[10px] font-bold">LIVE
                                     MATCH</span>
                             </div>
+                            {% if application.document.selfie_image %}
                             <img alt="Client Selfie" class="w-full h-64 object-cover object-top cursor-pointer"
-                                data-alt="A clear, frontal selfie of a man holding his passport next to his face for liveness verification. The lighting is natural and bright, ensuring no harsh shadows obscure facial features. The composition is focused and stable, conveying a high-trust digital identification environment with high clarity and detail."
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvtjx--TPei8OewYrMPFs382pxGZK1DtDKnk4saLpXY5lKWiuYu5_3FKVTWBHYDODYDUiZ4bs99mdEJXYZOabQ2keUp_2krK3JPrK2RemCq5IN_2lgooXRv8QXL2l1oD8UyGxua8qxscfSe8IXMfv3ujHd6ozbcvhVt_oqLvhNbdQGSijJ_lc0U1zbDQn3MAwJLHZ6jN-jGH1TyiZM_AbBtvz6nhuAv__Oe-k0RGzZjkNoTlorEvrhR6-ZLwagkmrAdZQUSBn7zQ" />
+                                src="{{ application.document.selfie_image.url }}"
+                                data-viewer-src="{{ application.document.selfie_image.url }}"
+                                data-document-title="Verification Selfie" />
+                            {% else %}
+                            <img alt="Client Selfie" class="w-full h-64 object-cover object-top cursor-pointer"
+                                src="https://via.placeholder.com/720x480?text=Selfie+Image"
+                                data-viewer-src="https://via.placeholder.com/720x480?text=Selfie+Image"
+                                data-document-title="Verification Selfie" />
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -373,53 +393,144 @@
     <!-- Bottom Action Bar -->
     <footer
         class="fixed bottom-0 right-0 left-[260px] bg-surface-container-lowest border-t border-outline-variant p-6 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-        <div class="max-w-[1440px] mx-auto flex items-end gap-gutter">
+        {% if application.status != 'approved' and application.status != 'rejected' %}
+        <form method="post" class="max-w-[1440px] mx-auto flex items-end gap-gutter w-full">
+            {% csrf_token %}
             <div class="flex-grow">
                 <label class="font-label-md text-label-md text-on-surface-variant block mb-2">Reviewer Remarks</label>
                 <textarea
+                    name="remarks"
                     class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
                     placeholder="Enter mandatory notes for approval or specific reason for rejection..."
-                    rows="2"></textarea>
+                    rows="2">{{ application.document.remarks }}</textarea>
             </div>
             <div class="flex gap-4 mb-1">
                 <button
+                    type="submit"
+                    name="action"
+                    value="request_resubmission"
                     class="px-6 py-3 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary-fixed transition-colors flex items-center gap-2">
                     <span class="material-symbols-outlined">refresh</span>
                     Request Resubmission
                 </button>
                 <button
+                    type="submit"
+                    name="action"
+                    value="reject"
                     class="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all active:scale-95 shadow-md flex items-center gap-2">
                     <span class="material-symbols-outlined">block</span>
                     Reject KYC
                 </button>
                 <button
+                    type="submit"
+                    name="action"
+                    value="approve"
                     class="px-8 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all active:scale-95 shadow-lg flex items-center gap-2">
                     <span class="material-symbols-outlined"
                         style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     Approve KYC
                 </button>
             </div>
+        </form>
+        {% else %}
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between gap-gutter w-full">
+            <div class="flex-grow rounded-2xl border border-outline-variant bg-surface-container-low p-6">
+                <p class="font-headline-sm text-headline-sm text-on-surface mb-2">No further actions available</p>
+                <p class="text-body-sm text-on-surface-variant">
+                    This application has been {{ application.get_status_display|lower }} and is closed for reviewer actions.
+                </p>
+            </div>
         </div>
+        {% endif %}
     </footer>
+    <!-- Document Viewer Overlay -->
+    <div id="document-viewer-overlay" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-4 overflow-auto">
+        <div class="max-w-[90vw] max-h-[90vh] mx-auto bg-surface rounded-3xl overflow-hidden shadow-2xl border border-outline-variant">
+            <div class="flex items-center justify-between bg-surface-container-low border-b border-outline-variant px-4 py-3">
+                <div>
+                    <p id="viewer-title" class="font-body-md text-on-surface">Document Preview</p>
+                    <p class="text-xs text-on-surface-variant">Press Escape to close or use zoom/fullscreen controls.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="viewer-zoom-out" type="button" class="bg-surface-container-low rounded-lg px-3 py-2 text-on-surface hover:bg-surface-container-high">-</button>
+                    <button id="viewer-zoom-in" type="button" class="bg-surface-container-low rounded-lg px-3 py-2 text-on-surface hover:bg-surface-container-high">+</button>
+                    <button id="viewer-fullscreen" type="button" class="bg-surface-container-low rounded-lg px-3 py-2 text-on-surface hover:bg-surface-container-high">Fullscreen</button>
+                    <button id="viewer-close" type="button" class="bg-surface-container-low rounded-lg px-3 py-2 text-on-surface hover:bg-surface-container-high">Close</button>
+                </div>
+            </div>
+            <div class="p-4 flex justify-center items-center min-h-[75vh]">
+                <img id="viewer-image" class="max-w-full max-h-[75vh] object-contain transition-transform duration-200" src="" alt="Document preview" />
+            </div>
+        </div>
+    </div>
     <!-- Micro-interactions Script -->
     <script>
-        // Simple interactivity for demonstration
+        const viewerOverlay = document.getElementById('document-viewer-overlay');
+        const viewerImage = document.getElementById('viewer-image');
+        const viewerTitle = document.getElementById('viewer-title');
+        const viewerZoomIn = document.getElementById('viewer-zoom-in');
+        const viewerZoomOut = document.getElementById('viewer-zoom-out');
+        const viewerFullscreen = document.getElementById('viewer-fullscreen');
+        const viewerClose = document.getElementById('viewer-close');
+        let currentZoom = 1;
+
+        function setZoom(scale) {
+            currentZoom = Math.min(3, Math.max(1, scale));
+            viewerImage.style.transform = `scale(${currentZoom})`;
+        }
+
+        function openViewer(src, title) {
+            viewerImage.src = src;
+            viewerImage.alt = title;
+            viewerTitle.textContent = title;
+            setZoom(1);
+            viewerOverlay.classList.remove('hidden');
+        }
+
+        function closeViewer() {
+            viewerOverlay.classList.add('hidden');
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        document.querySelectorAll('img[data-viewer-src]').forEach(img => {
+            img.addEventListener('click', () => {
+                openViewer(img.dataset.viewerSrc, img.dataset.documentTitle || img.alt);
+            });
+        });
+
+        viewerClose.addEventListener('click', closeViewer);
+        viewerOverlay.addEventListener('click', event => {
+            if (event.target === viewerOverlay) {
+                closeViewer();
+            }
+        });
+
+        viewerZoomIn.addEventListener('click', () => setZoom(currentZoom + 0.25));
+        viewerZoomOut.addEventListener('click', () => setZoom(currentZoom - 0.25));
+        viewerFullscreen.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                viewerOverlay.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !viewerOverlay.classList.contains('hidden')) {
+                closeViewer();
+            }
+        });
+
         document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', function (e) {
+            btn.addEventListener('click', function () {
                 if (this.innerText.includes('Approve')) {
                     const ripple = document.createElement('div');
                     ripple.className = 'absolute inset-0 bg-white/20 animate-ping rounded-xl pointer-events-none';
                     this.appendChild(ripple);
                     setTimeout(() => ripple.remove(), 1000);
                 }
-            });
-        });
-
-        // Image zoom mock-effect
-        document.querySelectorAll('img.cursor-pointer').forEach(img => {
-            img.addEventListener('click', function () {
-                this.classList.toggle('scale-105');
-                this.classList.toggle('z-50');
             });
         });
     </script>

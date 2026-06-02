@@ -120,7 +120,18 @@
                         <p class="text-on-surface-variant text-[16px]">Complete your identity verification to unlock all portal features.</p>
                     </div>
 
-                    {% if profile and profile.status == 'Pending' or profile and profile.status == 'Under Review' %}
+                    {% if profile and profile.status == 'Approved' %}
+                    <div class="flex items-center gap-3 px-4 py-2 bg-primary-container text-on-primary-container rounded-full w-fit">
+                        <span class="material-symbols-outlined text-[18px]">verified</span>
+                        <span class="text-[12px] uppercase tracking-wide">Verified</span>
+                    </div>
+                    {% elif profile and profile.status == 'Rejected' %}
+                    <div class="flex items-center gap-3 px-4 py-2 bg-error-container text-on-error-container rounded-full w-fit">
+                        <span class="material-symbols-outlined text-[18px]">block</span>
+                        <span class="text-[12px] uppercase tracking-wide">Application Rejected</span>
+                    </div>
+                    
+                    {% elif profile and profile.status == 'Pending' or profile and profile.status == 'Under Review' %}
                     <div class="flex items-center gap-3 px-4 py-2 bg-error-container text-on-error-container rounded-full w-fit">
                         <span class="material-symbols-outlined text-[18px]">hourglass_top</span>
                         <span class="text-[12px] uppercase tracking-wide">Waiting Approval</span>
@@ -140,7 +151,30 @@
                         <div class="relative z-10 max-w-md">
                             <span class="inline-block px-3 py-1 bg-primary-container text-on-primary-container rounded-lg text-[10px] uppercase mb-4">Required Action</span>
 
-                            {% if profile and profile.status == 'Pending' or profile and profile.status == 'Under Review' %}
+                            {% if profile and profile.status == 'Approved' %}
+                            <h3 class="text-[24px] font-bold text-on-surface mb-4 leading-tight">Your KYC is Approved</h3>
+
+                            <p class="text-on-surface-variant mb-8 text-[14px]">Welcome! Your identity has been verified and your account is fully enabled.</p>
+
+
+                            {% elif profile and profile.status == 'Rejected' %}
+                            <h3 class="text-[24px] font-bold text-on-surface mb-4 leading-tight">Your Application Was Rejected</h3>
+
+                            <p class="text-on-surface-variant mb-8 text-[14px]">We're sorry — your submission didn't meet our requirements. You may submit a new application.</p>
+
+                            {% if profile.application and profile.application.document and profile.application.document.remarks %}
+                            <div class="mb-6 p-4 bg-error-container text-on-error-container rounded-lg">
+                                <h4 class="font-bold mb-1">Verifier Remarks</h4>
+                                <div class="text-sm">{{ profile.application.document.remarks|linebreaksbr }}</div>
+                            </div>
+                            {% endif %}
+
+                            <a href="{% url 'kyc_upload' %}" class="inline-flex bg-primary text-on-primary px-8 py-4 rounded-xl font-bold items-center gap-3 hover:shadow-lg transition-all group">
+                                Submit New Application
+                                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+                            </a>
+
+                            {% elif profile and profile.status == 'Pending' or profile and profile.status == 'Under Review' %}
                             <h3 class="text-[24px] font-bold text-on-surface mb-4 leading-tight">Your KYC Application is Under Review</h3>
 
                             <p class="text-on-surface-variant mb-8 text-[14px]">Thank you for submitting your documents. Your application is being reviewed and will be approved shortly.</p>
@@ -149,6 +183,7 @@
                                 View Application Status
                                 <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
                             </a>
+
                             {% else %}
                             <h3 class="text-[24px] font-bold text-on-surface mb-4 leading-tight">Start Your KYC Application</h3>
 

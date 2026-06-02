@@ -15,7 +15,7 @@ urlpatterns = [
    
     path('verifier-dashboard/', views.verifier_dashboard, name='verifier_dashboard'),
     path('verifier-review-queue/', views.verifier_review_queue, name='verifier_review_queue'),
-    path('verifier-document-review/', views.verifier_document_review, name='verifier_document_review'),
+    path('verifier-document-review/<int:pk>/', views.verifier_document_review, name='verifier_document_review'),
     path('verifier-verification-history/', views.verifier_verification_history, name='verifier_verification_history'),
 
 
