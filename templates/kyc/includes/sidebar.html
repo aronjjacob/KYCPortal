@@ -31,7 +31,7 @@
         <span class="material-symbols-outlined" data-icon="people">people</span>
         <span class="text-[12px]">User Management</span>
       </a>
-      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'settings' %}bg-secondary-container text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all" href="#">
+      <a class="flex items-center gap-3 px-4 py-3 {% if current_page == 'settings' %}bg-secondary-container text-on-secondary-container font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} rounded-xl transition-all" href="#">
         <span class="material-symbols-outlined" data-icon="settings">settings</span>
         <span class="text-[12px]">Settings</span>
       </a>
