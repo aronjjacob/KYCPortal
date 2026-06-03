@@ -6,12 +6,24 @@ services:
     plan: starter
     branch: main
     buildCommand: ./build.sh
-    startCommand: python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: "python manage.py migrate && python manage.py create_default_users --auto && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: "your-app.onrender.com"
+      - key: DEFAULT_ADMIN_USERNAME
+        value: ""
+      - key: DEFAULT_ADMIN_EMAIL
+        value: ""
+      - key: DEFAULT_ADMIN_PASSWORD
+        value: ""
+      - key: DEFAULT_VERIFIER_USERNAME
+        value: ""
+      - key: DEFAULT_VERIFIER_EMAIL
+        value: ""
+      - key: DEFAULT_VERIFIER_PASSWORD
+        value: ""
     autoDeploy: true
     disk: 512MB
 
