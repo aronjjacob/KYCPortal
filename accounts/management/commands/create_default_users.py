@@ -100,10 +100,13 @@ class Command(BaseCommand):
                 user.save()
                 self.stdout.write(self.style.SUCCESS(f'Updated admin user: {data["username"]}'))
             else:
-                self.stdout.write(self.style.NOTICE(f'Admin user already exists: {data["username"]}'))
+                user.save()
+                self.stdout.write(self.style.NOTICE(f'Admin user already exists: {data["username"]} (verified permissions)'))
 
         admin_group = self._ensure_group('admin')
-        user.groups.add(admin_group)
+        if not user.groups.filter(name='admin').exists():
+            user.groups.add(admin_group)
+            self.stdout.write(self.style.SUCCESS(f'Assigned admin group to {data["username"]}'))
 
     def _create_or_update_verifier(self, data, force):
         if not data['username']:
@@ -128,7 +131,10 @@ class Command(BaseCommand):
                 user.save()
                 self.stdout.write(self.style.SUCCESS(f'Updated verifier user: {data["username"]}'))
             else:
-                self.stdout.write(self.style.NOTICE(f'Verifier user already exists: {data["username"]}'))
+                user.save()
+                self.stdout.write(self.style.NOTICE(f'Verifier user already exists: {data["username"]} (verified permissions)'))
 
         verifier_group = self._ensure_group('verifier')
-        user.groups.add(verifier_group)
+        if not user.groups.filter(name='verifier').exists():
+            user.groups.add(verifier_group)
+            self.stdout.write(self.style.SUCCESS(f'Assigned verifier group to {data["username"]}'))
